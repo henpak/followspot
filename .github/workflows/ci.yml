@@ -40,7 +40,7 @@ jobs:
           codesign -dv build/Followspot.app
           plutil -p build/Followspot.app/Contents/Info.plist
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Followspot-${{ github.sha }}
           path: |
