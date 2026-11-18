@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Northwind – Q3 Review</title>
+<!-- Neutral demo content for the README screenshots (scripts/record-demo.sh). -->
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #ffffff; --text: #1d2330; --muted: #6b7385; --line: #e3e6ec;
+    --accent: #3b6ef5; --accent-2: #18a999; --accent-3: #f2a33a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    background: var(--bg); color: var(--text); padding: 28px 34px;
+    -webkit-user-select: none; user-select: none; cursor: default;
+  }
+  header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+  h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); font-size: 13px; }
+  nav { display: flex; gap: 8px; }
+  button {
+    font: inherit; font-size: 13px; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--card); color: var(--text);
+  }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .kpi .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .kpi .value { font-size: 26px; font-weight: 650; margin-top: 4px; }
+  .kpi .delta { font-size: 12px; color: var(--accent-2); }
+  .kpi .delta.down { color: #d64545; }
+  .grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
+  h2 { font-size: 14px; margin: 0 0 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  td, th { padding: 7px 4px; border-bottom: 1px solid var(--line); text-align: left; }
+  th { color: var(--muted); font-weight: 500; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bar-label { fill: var(--muted); font-size: 11px; }
+</style>
+</head>
+<body oncontextmenu="return false">
+  <header>
+    <div>
+      <h1>Q3 Product Review</h1>
+      <div class="sub">Northwind Analytics · fictional demo data</div>
+    </div>
+    <nav>
+      <button>Overview</button>
+      <button>Regions</button>
+      <button class="primary">Export</button>
+    </nav>
+  </header>
+
+  <section class="kpis">
+    <div class="card kpi"><div class="label">Revenue</div><div class="value">$4.82M</div><div class="delta">▲ 12.4 % vs Q2</div></div>
+    <div class="card kpi"><div class="label">Active users</div><div class="value">38,210</div><div class="delta">▲ 6.1 %</div></div>
+    <div class="card kpi"><div class="label">Conversion</div><div class="value">3.7 %</div><div class="delta down">▼ 0.3 pt</div></div>
+    <div class="card kpi"><div class="label">NPS</div><div class="value">52</div><div class="delta">▲ 4</div></div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Monthly revenue (k$)</h2>
+      <svg viewBox="0 0 640 250" width="100%" role="img" aria-label="Bar chart of monthly revenue">
+        <g fill="var(--accent)">
+          <rect x="20"  y="130" width="56" height="90" rx="5"/>
+          <rect x="100" y="112" width="56" height="108" rx="5"/>
+          <rect x="180" y="120" width="56" height="100" rx="5"/>
+          <rect x="260" y="92"  width="56" height="128" rx="5"/>
+          <rect x="340" y="78"  width="56" height="142" rx="5"/>
+          <rect x="420" y="60"  width="56" height="160" rx="5" fill="var(--accent-2)"/>
+          <rect x="500" y="38"  width="56" height="182" rx="5" fill="var(--accent-2)"/>
+          <rect x="580" y="24"  width="56" height="196" rx="5" fill="var(--accent-2)"/>
+        </g>
+        <g class="bar-label" text-anchor="middle">
+          <text x="48"  y="240">Feb</text><text x="128" y="240">Mar</text><text x="208" y="240">Apr</text>
+          <text x="288" y="240">May</text><text x="368" y="240">Jun</text><text x="448" y="240">Jul</text>
+          <text x="528" y="240">Aug</text><text x="608" y="240">Sep</text>
+        </g>
+      </svg>
+    </div>
+    <div class="card">
+      <h2>Top regions</h2>
+      <table>
+        <tr><th>Region</th><th class="num">Revenue</th><th class="num">Growth</th></tr>
+        <tr><td>North America</td><td class="num">$1.92M</td><td class="num">+14 %</td></tr>
+        <tr><td>Europe</td><td class="num">$1.41M</td><td class="num">+11 %</td></tr>
+        <tr><td>Asia Pacific</td><td class="num">$0.98M</td><td class="num">+17 %</td></tr>
+        <tr><td>Latin America</td><td class="num">$0.33M</td><td class="num">+6 %</td></tr>
+        <tr><td>Middle East</td><td class="num">$0.18M</td><td class="num">+9 %</td></tr>
+      </table>
+    </div>
+  </section>
+</body>
+</html>

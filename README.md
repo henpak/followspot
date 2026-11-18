@@ -14,6 +14,8 @@ you are presenting.
 
 > A *followspot* is the theatre spotlight that follows the performer across the stage.
 
+![Followspot highlighting a chart on a dashboard: the rest of the screen is dimmed](docs/images/hero.png)
+
 ## Features
 
 - **Click rings**: every click shows a short animated ring. Left and right clicks have different colors.
@@ -24,6 +26,23 @@ you are presenting.
 - **Customizable**: 8 colors, three sizes, three dimming levels, optional crosshair guides.
 - **Multi-display**: works across all connected screens, including full-screen apps and Spaces.
 - **No permissions needed**: no Accessibility or Input Monitoring access, no network, no telemetry.
+
+## See it in action
+
+<table>
+  <tr>
+    <td width="50%"><b>Highlight area</b> <code>⌥F1</code><br>
+      <img src="docs/images/highlight.gif" alt="Dragging a rectangle around a chart; everything else is dimmed until the next click"></td>
+    <td width="50%"><b>Spotlight</b> <code>⌥F2</code><br>
+      <img src="docs/images/spotlight.gif" alt="A bright circle follows the cursor while the rest of the screen is dimmed"></td>
+  </tr>
+  <tr>
+    <td width="50%"><b>Cursor halo</b> <code>⌥F3</code><br>
+      <img src="docs/images/halo.gif" alt="A colored halo follows the pointer, clicks show rings"></td>
+    <td width="50%"><b>Click rings</b> <code>⌥F4</code><br>
+      <img src="docs/images/clicks.gif" alt="Short rings appear at every click; right clicks in a different color"></td>
+  </tr>
+</table>
 
 ## Requirements
 
@@ -96,6 +115,8 @@ Followspot lives in the menu bar (cursor icon). It has no Dock icon and no windo
 
 ### Settings
 
+<img src="docs/images/menu.png" alt="The Followspot menu with toggles, shortcuts and settings submenus" width="276" align="right">
+
 All settings are in the menu, take effect immediately (also on a visible halo or highlight) and
 are remembered across launches.
 
@@ -161,6 +182,7 @@ swift test                         # unit tests of the core logic (FollowspotCor
 swift run Followspot               # run without an app bundle
 scripts/build-app.sh --open        # build, install to ~/Applications and launch
 scripts/package-app.sh --universal --zip   # release bundle + zip in build/
+scripts/record-demo.sh             # re-record the README screenshots and GIFs (see the script for requirements)
 ```
 
 - `Sources/FollowspotCore`: AppKit-free logic (state machine, geometry, settings), fully unit tested
