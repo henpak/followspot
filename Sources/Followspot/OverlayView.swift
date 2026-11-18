@@ -109,7 +109,7 @@ final class OverlayView: NSView {
     }
 
     /// Applies new marking colours immediately, also to visible markings
-    /// (spec marking-colors: Sofortige Wirkung). Running ring animations keep their colour.
+    /// (spec marking-colors: Immediate effect). Running ring animations keep their colour.
     func applyColors(_ newColors: MarkingColors) {
         guard newColors != colors else { return }
         colors = newColors

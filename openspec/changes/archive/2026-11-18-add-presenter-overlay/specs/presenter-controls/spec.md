@@ -2,50 +2,50 @@
 
 ## Purpose
 
-Definiert, wie der Nutzer die App während einer Präsentation bedient – über systemweite Tastenkürzel, die Esc-Taste und ein Menüleisten-Menü – ohne die präsentierte App verlassen zu müssen.
+Defines how the user operates the app during a presentation, through system-wide shortcuts, the Esc key and a menu bar menu, without leaving the app being presented.
 
 ## ADDED Requirements
 
-### Requirement: Systemweite Hotkeys
-Die App SHALL folgende Tastenkürzel systemweit bereitstellen, unabhängig davon, welche App im Vordergrund ist: `ctrl+opt+H` startet die Rechteck-Auswahl, `ctrl+opt+S` schaltet Spotlight um, `ctrl+opt+C` schaltet das Cursor-Halo um.
+### Requirement: System-wide shortcuts
+The app SHALL provide the following shortcuts system-wide, regardless of which app is in front: `ctrl+opt+H` starts the rectangle selection, `ctrl+opt+S` toggles the spotlight, `ctrl+opt+C` toggles the cursor halo.
 
-#### Scenario: Hotkey in fremder App
-- **WHEN** eine andere App im Vordergrund ist und der Nutzer `ctrl+opt+S` drückt
-- **THEN** schaltet sich der Spotlight um, ohne dass die App den Fokus verliert
+#### Scenario: Shortcut in another app
+- **WHEN** another app is in front and the user presses `ctrl+opt+S`
+- **THEN** the spotlight toggles without that app losing focus
 
-#### Scenario: Hotkey bereits belegt
-- **WHEN** ein Tastenkürzel beim Start nicht registriert werden kann
-- **THEN** startet die App trotzdem und das Menü zeigt an, welches Kürzel nicht verfügbar ist
+#### Scenario: Shortcut already taken
+- **WHEN** a shortcut cannot be registered at launch
+- **THEN** the app still starts and the menu shows which shortcut is unavailable
 
-### Requirement: Esc entfernt Markierungen
-Wenn eine Markierung oder die Rechteck-Auswahl aktiv ist, SHALL Esc alle aktiven Markierungen entfernen bzw. die Auswahl abbrechen. Ist nichts davon aktiv, MUST Esc unverändert an die Vordergrund-App weitergereicht werden.
+### Requirement: Esc removes markings
+While a marking or the rectangle selection is active, Esc SHALL remove all active markings or cancel the selection. If none of these is active, Esc MUST be passed on to the app in front unchanged.
 
-#### Scenario: Esc bei aktivem Highlight
-- **WHEN** ein Rechteck-Highlight aktiv ist und der Nutzer Esc drückt
-- **THEN** verschwindet das Highlight
+#### Scenario: Esc with an active highlight
+- **WHEN** a rectangle highlight is active and the user presses Esc
+- **THEN** the highlight disappears
 
-#### Scenario: Esc ohne aktive Markierung
-- **WHEN** keine Markierung aktiv ist und der Nutzer in einer App Esc drückt
-- **THEN** erhält die App das Esc wie gewohnt
+#### Scenario: Esc without an active marking
+- **WHEN** no marking is active and the user presses Esc in an app
+- **THEN** the app receives the Esc as usual
 
-### Requirement: Menüleisten-Menü
-Die App SHALL ausschließlich als Symbol in der Menüleiste erscheinen (kein Dock-Symbol, kein Fenster beim Start). Das Menü MUST Schalter für Klick-Ringe, Cursor-Halo und Spotlight mit sichtbarem Ein/Aus-Zustand, einen Eintrag zum Starten der Rechteck-Auswahl, die zugehörigen Tastenkürzel sowie „Beenden“ enthalten.
+### Requirement: Menu bar menu
+The app SHALL appear only as an icon in the menu bar (no Dock icon, no window at launch). The menu MUST contain toggles for click rings, cursor halo and spotlight with a visible on/off state, an item to start the rectangle selection, the corresponding shortcuts, and “Quit”.
 
-#### Scenario: App starten
-- **WHEN** der Nutzer die App startet
-- **THEN** erscheint nur ein Symbol in der Menüleiste und kein Dock-Symbol
+#### Scenario: Launching the app
+- **WHEN** the user launches the app
+- **THEN** only an icon appears in the menu bar and no Dock icon
 
-#### Scenario: Zustand im Menü
-- **WHEN** Spotlight per Hotkey eingeschaltet wurde und der Nutzer das Menü öffnet
-- **THEN** ist der Spotlight-Eintrag als aktiv markiert
+#### Scenario: State in the menu
+- **WHEN** the spotlight was turned on by shortcut and the user opens the menu
+- **THEN** the spotlight item is shown as active
 
-#### Scenario: Beenden
-- **WHEN** der Nutzer im Menü „Beenden“ wählt
-- **THEN** werden alle Markierungen entfernt und die App beendet sich
+#### Scenario: Quitting
+- **WHEN** the user chooses “Quit” in the menu
+- **THEN** all markings are removed and the app quits
 
-### Requirement: Hinweis auf fehlende Berechtigungen
-Benötigt eine Funktion eine macOS-Berechtigung, die nicht erteilt ist, SHALL die App dies im Menü anzeigen und einen Weg zu den passenden Systemeinstellungen anbieten, statt still zu versagen.
+### Requirement: Notice about missing permissions
+If a feature needs a macOS permission that has not been granted, the app SHALL show this in the menu and offer a way to the relevant System Settings instead of failing silently.
 
-#### Scenario: Berechtigung fehlt
-- **WHEN** eine benötigte Berechtigung nicht erteilt ist
-- **THEN** zeigt das Menü einen Hinweis mit Eintrag zum Öffnen der Systemeinstellungen
+#### Scenario: Permission missing
+- **WHEN** a required permission has not been granted
+- **THEN** the menu shows a notice with an item that opens System Settings

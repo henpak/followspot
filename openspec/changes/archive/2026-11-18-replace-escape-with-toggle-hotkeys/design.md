@@ -2,23 +2,23 @@
 
 ## Context
 
-Bisher (`add-presenter-overlay`, Decision 6/7) wird Esc dynamisch als Carbon-Hotkey registriert, solange Auswahl, Highlight, Spotlight oder Halo aktiv sind, und `OverlayState.escape()` setzt dann alles außer den Klick-Ringen zurück. `⌥F1` startet immer eine neue Auswahl; ein sichtbares Highlight wird dabei ersetzt.
+So far (`add-presenter-overlay`, Decisions 6/7) Esc is registered dynamically as a Carbon hotkey while a selection, highlight, spotlight or halo is active, and `OverlayState.escape()` then resets everything except the click rings. `⌥F1` always starts a new selection; a visible highlight is replaced.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Jede Funktion wird ausschließlich über ihr eigenes Kürzel (oder den Menüeintrag) ein- und ausgeschaltet.
-- Esc gehört immer der Vordergrund-App.
+- Every feature is turned on and off only by its own shortcut (or menu item).
+- Esc always belongs to the app in front.
 
 **Non-Goals:**
-- Ein „alles aus“-Kürzel. „Beenden“ räumt weiterhin alles ab.
-- Änderungen an Klick-Verhalten (Klick entfernt Highlight, Klick ohne Ziehen bricht ab).
+- An “everything off” shortcut. “Quit” still clears everything.
+- Changes to click behavior (a click removes the highlight, a click without dragging cancels).
 
 ## Decisions
 
-### 1. `⌥F1` schaltet zwischen „aus“ und „Highlight-Funktion aktiv“ um
+### 1. `⌥F1` toggles between “off” and “highlight feature active”
 
-„Aktiv“ heißt: Auswahl läuft **oder** Highlight sichtbar (`OverlayState.isHighlightActive`). `toggleSelection()`:
+“Active” means: a selection is running **or** a highlight is visible (`OverlayState.isHighlightActive`). `toggleSelection()`:
 
 ```
 isHighlightActive == false  →  beginSelection()
@@ -26,23 +26,23 @@ mode == .selecting          →  cancelSelection()
 highlight != nil            →  highlight = nil
 ```
 
-Wer ein sichtbares Highlight durch ein neues ersetzen will, drückt `⌥F1` zweimal oder klickt einmal und drückt dann `⌥F1`.
+To replace a visible highlight with a new one, press `⌥F1` twice, or click once and then press `⌥F1`.
 
-Verworfen: `⌥F1` bei sichtbarem Highlight startet weiterhin eine neue Auswahl. Das widerspräche dem gewünschten Prinzip „erneut drücken = aus“.
+Rejected: `⌥F1` with a visible highlight keeps starting a new selection. That would contradict the desired principle “press again = off”.
 
-### 2. Esc-Hotkey komplett entfernen
+### 2. Remove the Esc hotkey completely
 
-`HotkeyAction.escape` (Rohwert 4), `setEscapeRegistered`, `isEscapeRegistered`, `escapeShouldBeRegistered` und `hasActiveMarkings` entfallen. Der Rohwert 4 wird nicht neu vergeben; `clickRings` behält 5.
+`HotkeyAction.escape` (raw value 4), `setEscapeRegistered`, `isEscapeRegistered`, `escapeShouldBeRegistered` and `hasActiveMarkings` are removed. Raw value 4 is not reused; `clickRings` keeps 5.
 
-### 3. Menüeintrag „Bereich hervorheben“ mit Zustand
+### 3. Menu item “Highlight area” with state
 
-Der Eintrag bekommt ein Häkchen bei `isHighlightActive` und ruft dieselbe Umschaltung auf wie `⌥F1`. So verhält er sich wie die anderen drei Schalter.
+The item gets a check mark when `isHighlightActive` and triggers the same toggle as `⌥F1`. It thereby behaves like the other three toggles.
 
 ## Risks / Trade-offs
 
-- **Gewohnheit Esc:** Wer Esc drückt, um eine Auswahl abzubrechen, bewegt jetzt nichts mehr; Esc geht an die App. → Ein Klick ohne Ziehen bricht weiterhin ab; `⌥F1` ebenso. README und Menü nennen kein Esc mehr.
-- **Zwei Drücke für ein neues Highlight:** Bewusst akzeptiert zugunsten eines einheitlichen Prinzips. Meist wird ohnehin zwischendurch geklickt, was das alte Highlight entfernt.
+- **Esc habit:** anyone pressing Esc to cancel a selection now changes nothing; Esc goes to the app. → A click without dragging still cancels, and so does `⌥F1`. README and menu no longer mention Esc.
+- **Two presses for a new highlight:** accepted deliberately in favor of a consistent principle. Usually there is a click in between anyway, which removes the old highlight.
 
 ## Migration Plan
 
-Neu bauen mit `scripts/build-app.sh --open`. Keine gespeicherten Daten betroffen.
+Rebuild with `scripts/build-app.sh --open`. No stored data is affected.

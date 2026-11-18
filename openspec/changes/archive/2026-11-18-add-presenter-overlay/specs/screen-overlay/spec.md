@@ -2,54 +2,54 @@
 
 ## Purpose
 
-Stellt eine transparente Zeichenebene über allen Bildschirmen bereit, auf der Klick-Visualisierungen und Highlights erscheinen, ohne die Bedienung der darunterliegenden Apps zu stören.
+Provides a transparent drawing layer above all displays on which click visualizations and highlights appear, without interfering with the apps underneath.
 
 ## ADDED Requirements
 
-### Requirement: Overlay auf allen Bildschirmen
-Die App SHALL auf jedem angeschlossenen Bildschirm eine transparente Overlay-Ebene anzeigen, die über allen normalen App-Fenstern liegt, auch über Vollbild-Apps und in allen Spaces.
+### Requirement: Overlay on all displays
+The app SHALL show a transparent overlay layer on every connected display that sits above all regular app windows, including full-screen apps and all Spaces.
 
-#### Scenario: Zwei Bildschirme angeschlossen
-- **WHEN** die App läuft und zwei Bildschirme angeschlossen sind
-- **THEN** können Markierungen auf beiden Bildschirmen angezeigt werden
+#### Scenario: Two displays connected
+- **WHEN** the app is running and two displays are connected
+- **THEN** markings can be shown on both displays
 
-#### Scenario: App im Vollbild
-- **WHEN** eine andere App im Vollbildmodus läuft
-- **THEN** erscheinen Markierungen weiterhin über dieser App
+#### Scenario: Full-screen app
+- **WHEN** another app runs in full-screen mode
+- **THEN** markings still appear above that app
 
-#### Scenario: Spaces wechseln
-- **WHEN** der Nutzer in einen anderen Space wechselt
-- **THEN** bleibt das Overlay dort verfügbar
+#### Scenario: Switching Spaces
+- **WHEN** the user switches to another Space
+- **THEN** the overlay remains available there
 
-### Requirement: Klick-Durchlässigkeit im Normalbetrieb
-Außerhalb des Rechteck-Auswahlmodus SHALL das Overlay keine Maus- oder Tastatureingaben abfangen; alle Eingaben MUST die darunterliegenden Apps unverändert erreichen.
+### Requirement: Click-through in normal operation
+Outside the rectangle selection mode the overlay SHALL NOT intercept mouse or keyboard input; all input MUST reach the apps underneath unchanged.
 
-#### Scenario: Klick durch das Overlay
-- **WHEN** der Nutzer im Normalbetrieb auf einen Button einer App klickt
-- **THEN** löst der Button in der App wie gewohnt aus
+#### Scenario: Clicking through the overlay
+- **WHEN** the user clicks a button of an app during normal operation
+- **THEN** the button triggers in the app as usual
 
-#### Scenario: Klick bei aktivem Spotlight
-- **WHEN** Spotlight oder Cursor-Halo aktiv ist und der Nutzer klickt
-- **THEN** erreicht der Klick die darunterliegende App
+#### Scenario: Clicking with an active spotlight
+- **WHEN** the spotlight or cursor halo is active and the user clicks
+- **THEN** the click reaches the app underneath
 
-### Requirement: Sichtbarkeit bei Bildschirmfreigabe
-Das Overlay MUST bei der Freigabe des gesamten Bildschirms durch Konferenz-Apps im übertragenen Bild enthalten sein und darf sich nicht von der Bildschirmaufnahme ausschließen.
+### Requirement: Visibility when screen sharing
+The overlay MUST be included in the transmitted picture when a conferencing app shares the entire screen, and MUST NOT exclude itself from screen capture.
 
-#### Scenario: Vollbild-Freigabe
-- **WHEN** der Nutzer den ganzen Bildschirm in einer Konferenz-App teilt und klickt
-- **THEN** sehen die Zuschauer den Klick-Ring
+#### Scenario: Sharing the entire screen
+- **WHEN** the user shares the entire screen in a conferencing app and clicks
+- **THEN** viewers see the click ring
 
-#### Scenario: Freigabe eines einzelnen Fensters
-- **WHEN** der Nutzer nur ein einzelnes App-Fenster teilt
-- **THEN** ist das Overlay für Zuschauer nicht sichtbar (bekannte, akzeptierte Einschränkung)
+#### Scenario: Sharing a single window
+- **WHEN** the user shares only a single app window
+- **THEN** the overlay is not visible to viewers (known, accepted limitation)
 
-### Requirement: Reaktion auf Bildschirm-Änderungen
-Die App SHALL das Overlay anpassen, wenn Bildschirme angeschlossen, getrennt oder in Auflösung bzw. Anordnung geändert werden, ohne Neustart der App.
+### Requirement: Reacting to display changes
+The app SHALL adapt the overlay when displays are connected, disconnected, or change resolution or arrangement, without restarting the app.
 
-#### Scenario: Externer Monitor wird angeschlossen
-- **WHEN** während die App läuft ein externer Monitor angeschlossen wird
-- **THEN** erscheinen Markierungen auch auf dem neuen Monitor an der korrekten Position
+#### Scenario: External display connected
+- **WHEN** an external display is connected while the app is running
+- **THEN** markings also appear on the new display at the correct position
 
-#### Scenario: Monitor wird getrennt
-- **WHEN** ein Monitor getrennt wird
-- **THEN** läuft die App ohne Fehler auf den verbleibenden Bildschirmen weiter
+#### Scenario: Display disconnected
+- **WHEN** a display is disconnected
+- **THEN** the app keeps running without errors on the remaining displays

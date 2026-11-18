@@ -2,95 +2,95 @@
 
 ## Context
 
-Siehe proposal.md – Why. Ist-Stand (aus `add-presenter-overlay`): Alle Farben sind `static let`-Konstanten in `Sources/Presenter/Style.swift`. `OverlayView` setzt Halo-, Rahmen-, Fadenkreuz- und Auswahlfarben einmalig in `setUpLayers()` und liest die Klickfarben in `showRing(at:kind:)`. Laufzeitzustand fließt über `OverlayController` → `OverlayManager.apply(_:)` → `OverlayView.apply(_:displayID:)`. Das Menü (`StatusMenu`) wird bei jedem Öffnen neu aufgebaut (`menuNeedsUpdate`). Es gibt noch keine persistierten Einstellungen.
+See proposal.md, Why. Current state (from `add-presenter-overlay`): all colors are `static let` constants in `Sources/Presenter/Style.swift`. `OverlayView` sets the halo, border, crosshair and selection colors once in `setUpLayers()` and reads the click colors in `showRing(at:kind:)`. Runtime state flows through `OverlayController` → `OverlayManager.apply(_:)` → `OverlayView.apply(_:displayID:)`. The menu (`StatusMenu`) is rebuilt every time it opens (`menuNeedsUpdate`). There are no persisted settings yet.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Farb-, Größen- und Hilfslinien-Einstellungen ohne Neubau, sofort wirksam auf alle Bildschirme.
-- Palette, Größenstufen und Regeln (Defaults, Unterscheidbarkeit, Fallbacks) als reine, getestete Logik in `PresenterCore`.
-- Spätere Erweiterung (z. B. eigene Farbe per Farbwähler) ohne Umbau möglich.
+- Color, size and guide settings without rebuilding, effective immediately on all displays.
+- Palette, size levels and rules (defaults, distinctness, fallbacks) as pure, tested logic in `PresenterCore`.
+- Later extensions (e.g. a custom color through a color picker) possible without restructuring.
 
 **Non-Goals:**
-- Einstellungsfenster; die Farbwahl bleibt im Menü.
-- Live-Vorschau beim Überfahren der Menüeinträge.
-- Farbe für Klicks mit weiteren Maustasten, Abdunklungsfarbe oder Deckkraft einstellbar machen.
-- Stufenlose Größen, Größe des Highlight-Rahmens, Linienstärke von Halo/Fadenkreuz.
+- A settings window; color choice stays in the menu.
+- Live preview while hovering menu items.
+- Making the color for clicks with other mouse buttons, the dimming color or the opacity adjustable.
+- Continuous sizes, size of the highlight border, line width of halo/crosshair.
 
 ## Decisions
 
-### 1. Palette als Enum in `PresenterCore`
-`PaletteColor: String, CaseIterable` mit stabilen IDs als Rohwert (`orange`, `yellow`, `red`, `pink`, `purple`, `blue`, `teal`, `green`), deutschem Anzeigenamen und sRGB-Werten:
+### 1. Palette as an enum in `PresenterCore`
+`PaletteColor: String, CaseIterable` with stable IDs as raw values (`orange`, `yellow`, `red`, `pink`, `purple`, `blue`, `teal`, `green`), a display name and sRGB values:
 
 | ID | Name | sRGB |
 |---|---|---|
 | orange | Orange | 1.00 / 0.60 / 0.00 |
-| yellow | Gelb | 1.00 / 0.80 / 0.00 |
-| red | Rot | 1.00 / 0.23 / 0.19 |
+| yellow | Yellow | 1.00 / 0.80 / 0.00 |
+| red | Red | 1.00 / 0.23 / 0.19 |
 | pink | Pink | 1.00 / 0.18 / 0.57 |
-| purple | Lila | 0.69 / 0.32 / 0.87 |
-| blue | Blau | 0.18 / 0.55 / 1.00 |
-| teal | Türkis | 0.00 / 0.78 / 0.80 |
-| green | Grün | 0.20 / 0.80 / 0.35 |
+| purple | Purple | 0.69 / 0.32 / 0.87 |
+| blue | Blue | 0.18 / 0.55 / 1.00 |
+| teal | Teal | 0.00 / 0.78 / 0.80 |
+| green | Green | 0.20 / 0.80 / 0.35 |
 
-Die IDs werden gespeichert, nicht die Namen oder RGB-Werte. Dadurch können Namen und Farbtöne später nachjustiert werden, ohne dass gespeicherte Werte ungültig werden.
-- *Alternative: RGB speichern:* Das würde zwar beliebige Farben erlauben, aber Validierung und Unterscheidbarkeit werden unscharf (ab wann sind zwei Farben „gleich“?). Verworfen, freie Farben sind Non-Goal.
+The IDs are stored, not the names or RGB values. Names and tones can therefore be adjusted later without invalidating stored values.
+- *Alternative: storing RGB:* this would allow arbitrary colors, but validation and distinctness become fuzzy (when are two colors “the same”?). Rejected; free colors are a non-goal.
 
-### 2. `MarkingColors` als eigener Wert, getrennt von `OverlayState`
-Struct `MarkingColors { accent, rightClick }` mit:
-- `init(accentID: String?, rightClickID: String?)`: Unbekannte oder fehlende Werte werden zum Default (Orange/Blau). Sind beide Farben gleich, bleibt der Akzent erhalten, und Rechtsklick wird Blau. Ist der Akzent selbst Blau, wird Rechtsklick die erste andere Palettenfarbe (Orange).
-- `mutating func setAccent(_:) -> Bool` / `setRightClick(_:) -> Bool`: Die Methoden lehnen eine Farbe ab, wenn die andere Einstellung sie bereits nutzt.
-- `func isSelectable(_ color:, forAccent:) -> Bool` für die Menülogik.
+### 2. `MarkingColors` as a separate value, apart from `OverlayState`
+Struct `MarkingColors { accent, rightClick }` with:
+- `init(accentID: String?, rightClickID: String?)`: unknown or missing values become the default (Orange/Blue). If both colors are the same, the accent is kept and the right-click color becomes Blue. If the accent itself is Blue, the right-click color becomes the first other palette color (Orange).
+- `mutating func setAccent(_:) -> Bool` / `setRightClick(_:) -> Bool`: reject a color that the other setting already uses.
+- `func isSelectable(_ color:, forAccent:) -> Bool` for the menu logic.
 
-Die Farben gehören nicht in `OverlayState`. `OverlayState` beschreibt den flüchtigen Sitzungszustand (Modus, Markierungen, Esc-Logik), die Farben sind dauerhafte Einstellungen. Getrennt bleiben die bestehenden Zustandstests unberührt, und Esc bzw. `clearAll()` müssen Farben nicht berücksichtigen.
+The colors do not belong in `OverlayState`. `OverlayState` describes the transient session state (mode, markings, Esc logic); the colors are persistent settings. Keeping them apart leaves the existing state tests untouched, and Esc or `clearAll()` do not have to consider colors.
 
-### 3. Speicherung über `ColorStore` mit injizierbaren `UserDefaults`
-`ColorStore` in `PresenterCore` liest und schreibt die Schlüssel `accentColor` und `rightClickColor` (Palette-IDs) in einer übergebenen `UserDefaults`-Instanz. Die App nutzt `.standard` (Domain `local.presenter.app`), die Tests nutzen eine eigene Suite. Gespeichert wird bei jeder Änderung, ein „Speichern“-Schritt existiert nicht.
+### 3. Persistence through `ColorStore` with injectable `UserDefaults`
+`ColorStore` in `PresenterCore` reads and writes the keys `accentColor` and `rightClickColor` (palette IDs) in a given `UserDefaults` instance. The app uses `.standard` (domain `local.presenter.app`), the tests use their own suite. Values are saved on every change; there is no separate “save” step.
 
-### 4. Laufzeitverteilung: eigener Pfad `applyColors`
-`OverlayController` hält `colors: MarkingColors`. Bei jeder Änderung (`didSet`) speichert er die Farben und ruft `OverlayManager.applyColors(_:)` auf. Das reicht die Farben an jede `OverlayView.applyColors(_:)` weiter, und die View setzt dort ohne implizite Animation die Farben von Halo, Highlight-Rahmen, Fadenkreuz und Auswahlrechteck neu. Die View merkt sich die Farben für neue Klick-Ringe. Neu angelegte Panels (Monitor angesteckt) bekommen die aktuellen Farben in `rebuild()`.
-- *Alternative: Farben über `apply(_ state:)` mitschicken:* Die Farben würden dann bei jeder Mausbewegung oder Zustandsänderung neu gesetzt. Verworfen, siehe Decision 2.
+### 4. Runtime distribution: a separate `applyColors` path
+`OverlayController` holds `colors: MarkingColors`. On every change (`didSet`) it saves the colors and calls `OverlayManager.applyColors(_:)`. That passes the colors to every `OverlayView.applyColors(_:)`, where the view re-applies the colors of halo, highlight border, crosshair and selection rectangle without implicit animation. The view remembers the colors for new click rings. Newly created panels (display connected) get the current colors in `rebuild()`.
+- *Alternative: sending colors along with `apply(_ state:)`:* the colors would then be set again on every mouse movement or state change. Rejected, see Decision 2.
 
-### 5. Abgeleitete Farbtöne in `Style`
-`Style` behält Größen und Dauern als Konstanten. Die festen Farben `leftClickColor`, `rightClickColor`, `haloFill`, `haloStroke`, `accent`, `crosshairColor` und `selectionFill` werden zu Funktionen der gewählten Palettenfarbe, mit den bisherigen Deckkraftwerten: Halo-Füllung 28 %, Halo-Rand 75 %, Fadenkreuz 80 %, Auswahlfüllung 8 %, Ring-Füllung 18 %. `otherClickColor`, `dimColor` und `selectionCatcherColor` bleiben fest.
+### 5. Derived tones in `Style`
+`Style` keeps sizes and durations as constants. The fixed colors `leftClickColor`, `rightClickColor`, `haloFill`, `haloStroke`, `accent`, `crosshairColor` and `selectionFill` become functions of the chosen palette color, with the existing opacity values: halo fill 28 %, halo stroke 75 %, crosshair 80 %, selection fill 8 %, ring fill 18 %. `otherClickColor`, `dimColor` and `selectionCatcherColor` stay fixed.
 
-### 6. Menü: zwei Untermenüs mit Farbpunkten
-`StatusMenu` bekommt nach den Funktionsschaltern die Einträge „Akzentfarbe“ und „Rechtsklick-Farbe“. Jeder Eintrag zeigt als Bild einen Farbpunkt der aktiven Farbe und hat ein Untermenü mit 8 Einträgen (Farbpunkt plus Name). Die aktive Farbe trägt ein Häkchen (`state = .on`). Die von der anderen Einstellung belegte Farbe ist `isEnabled = false`, ihr Farbpunkt wird abgeschwächt gezeichnet (35 % Deckkraft), weil Nicht-Template-Bilder nicht automatisch ausgegraut werden. Die Farbpunkte sind ca. 12 pt große, per `NSImage(size:flipped:drawingHandler:)` gezeichnete Kreise mit dünnem, halbtransparentem Rand, damit Gelb auch auf hellem Menü-Hintergrund erkennbar ist. Den Menü-Eintrag selbst anzuklicken gilt nicht als globaler Klick (eigene App), ein sichtbares Highlight bleibt also bestehen.
+### 6. Menu: two submenus with color dots
+After the feature toggles, `StatusMenu` gets the items “Accent Color” and “Right-Click Color”. Each item shows a color dot of the active color as its image and has a submenu with 8 items (color dot plus name). The active color carries a check mark (`state = .on`). The color taken by the other setting has `isEnabled = false`, and its dot is drawn faded (35 % opacity), because non-template images are not grayed out automatically. The dots are circles of about 12 pt drawn with `NSImage(size:flipped:drawingHandler:)`, with a thin semi-transparent border so yellow stays visible on a light menu background. Clicking the menu item itself does not count as a global click (own app), so a visible highlight stays.
 
-### 7. Größenstufen und Erscheinungs-Einstellungen in `PresenterCore`
-`MarkingSize: String, CaseIterable` (`small`, `medium`, `large`; Anzeigenamen Klein/Mittel/Groß) und Struct `AppearanceSettings { clickRingSize, haloSize, spotlightSize, showsSelectionGuides }` mit Defaults Mittel/Mittel/Mittel/an. `AppearanceStore` liest und schreibt diese Werte wie `ColorStore` in injizierbare `UserDefaults`. Schlüssel: `clickRingSize`, `haloSize`, `spotlightSize` (IDs), `showsSelectionGuides` (Bool). Fehlt der Bool-Schlüssel, gilt `true` (`object(forKey:) == nil`-Prüfung, weil `bool(forKey:)` sonst `false` liefert). Die Werte liegen getrennt von `MarkingColors`, weil zwischen Farben und Größen keine Regel besteht.
-- *Alternative: alles in einem `Settings`-Struct:* Weniger Typen, aber die bereits getesteten Farbregeln müssten umgebaut werden. Verworfen.
+### 7. Size levels and appearance settings in `PresenterCore`
+`MarkingSize: String, CaseIterable` (`small`, `medium`, `large`; display names Small/Medium/Large) and struct `AppearanceSettings { clickRingSize, haloSize, spotlightSize, showsSelectionGuides }` with defaults Medium/Medium/Medium/on. `AppearanceStore` reads and writes these values in injectable `UserDefaults` like `ColorStore`. Keys: `clickRingSize`, `haloSize`, `spotlightSize` (IDs), `showsSelectionGuides` (Bool). If the Bool key is missing, `true` applies (an `object(forKey:) == nil` check, because `bool(forKey:)` would return `false`). These values are kept apart from `MarkingColors` because there is no rule linking colors and sizes.
+- *Alternative: everything in one `Settings` struct:* fewer types, but the already tested color rules would have to be restructured. Rejected.
 
-### 8. Konkrete Maße je Stufe in `Style`
-Die Pixelwerte sind Darstellung und gehören in die App, nicht in `PresenterCore`. „Mittel“ entspricht exakt den bisherigen Konstanten:
+### 8. Concrete dimensions per level in `Style`
+Pixel values are presentation and belong in the app, not in `PresenterCore`. “Medium” matches the existing constants exactly:
 
-| | Klein | Mittel | Groß |
+| | Small | Medium | Large |
 |---|---|---|---|
-| Klick-Ring Start-/Endradius | 12 / 20 pt | 18 / 30 pt | 26 / 44 pt |
-| Klick-Ring Linienstärke | 3 pt | 4 pt | 5 pt |
-| Halo-Radius | 20 pt | 28 pt | 40 pt |
-| Spotlight-Radius | 80 pt | 120 pt | 180 pt |
+| Click ring start/end radius | 12 / 20 pt | 18 / 30 pt | 26 / 44 pt |
+| Click ring line width | 3 pt | 4 pt | 5 pt |
+| Halo radius | 20 pt | 28 pt | 40 pt |
+| Spotlight radius | 80 pt | 120 pt | 180 pt |
 
-Die Stufen sind etwa Faktor 1,4–1,5 auseinander und damit im Video-Stream klar unterscheidbar.
+The levels are about a factor of 1.4–1.5 apart, which keeps them clearly distinguishable in a video stream.
 
-### 8a. Abdunklungsstufen
-`DimLevel: String, CaseIterable` (`light`, `medium`, `strong`; Anzeigenamen Leicht/Mittel/Stark) mit der Deckkraft als Wert im Core (25 / 40 / 60 %). Anders als die Pixelmaße ist die Deckkraft Teil der Spec und wird deshalb im Core getestet. `AppearanceSettings` bekommt `highlightDimming` und `spotlightDimming` (Default Mittel). Gespeichert wird unter den Schlüsseln `highlightDimming` und `spotlightDimming`. In `OverlayView` erhalten `highlightDimLayer` und `spotlightLayer` je eine eigene `fillColor` (Schwarz mit der jeweiligen Deckkraft). `Style.dimColor` wird zu `Style.dimColor(_ level:)`. Den Wert 60 % als Obergrenze habe ich gewählt, damit der Inhalt außerhalb im Video noch erkennbar bleibt.
+### 8a. Dimming levels
+`DimLevel: String, CaseIterable` (`light`, `medium`, `strong`; display names Light/Medium/Strong) with the opacity as a value in the core (25 / 40 / 60 %). Unlike the pixel dimensions, the opacity is part of the spec and is therefore tested in the core. `AppearanceSettings` gets `highlightDimming` and `spotlightDimming` (default Medium), stored under the keys `highlightDimming` and `spotlightDimming`. In `OverlayView`, `highlightDimLayer` and `spotlightLayer` each get their own `fillColor` (black at the respective opacity). `Style.dimColor` becomes `Style.dimColor(_ level:)`. 60 % was chosen as the upper limit so the content outside stays recognizable in the video.
 
-### 9. Laufzeitverteilung analog zu den Farben
-`OverlayController` hält `appearance: AppearanceSettings` (beim Start geladen). `didSet` speichert und ruft `OverlayManager.applyAppearance(_:)` auf, das auch an später angelegte Panels geht. `OverlayView.applyAppearance(_:)` setzt `bounds`/`path` des Halo-Layers und die Füllfarben der beiden Dimm-Layer neu, merkt sich den Spotlight-Radius sowie Ring-Maße und Hilfslinien-Schalter und ruft `refreshCursorDependent()` auf. So ändern sich ein aktives Halo, ein aktiver Spotlight, ein sichtbares Highlight und ein sichtbares Fadenkreuz sofort. Das Fadenkreuz wird nur gezeichnet, wenn `isSelecting && showsSelectionGuides`. Das Auswahlrechteck ist davon unabhängig, der System-Cursor bleibt ein Fadenkreuz-Cursor.
+### 9. Runtime distribution like the colors
+`OverlayController` holds `appearance: AppearanceSettings` (loaded at launch). `didSet` saves it and calls `OverlayManager.applyAppearance(_:)`, which also reaches panels created later. `OverlayView.applyAppearance(_:)` resets `bounds`/`path` of the halo layer and the fill colors of the two dimming layers, remembers the spotlight radius, ring dimensions and guide toggle, and calls `refreshCursorDependent()`. This way an active halo, an active spotlight, a visible highlight and a visible crosshair change immediately. The crosshair is drawn only when `isSelecting && showsSelectionGuides`. The selection rectangle does not depend on it, and the system cursor stays a crosshair cursor.
 
-### 10. Menü-Anordnung
-Nach den Farb-Untermenüs folgen, durch einen Trenner abgesetzt, die Untermenüs „Größe Klick-Ring“, „Größe Halo“ und „Größe Spotlight“ (je Klein/Mittel/Groß mit Häkchen), dann „Abdunklung Highlight“ und „Abdunklung Spotlight“ (je Leicht/Mittel/Stark mit Häkchen) und der Schalter „Hilfslinien beim Aufziehen“ (Häkchen = an). Die Menülogik nutzt denselben Aufbau-bei-Öffnen-Mechanismus wie die Farben.
+### 10. Menu order
+After the color submenus, separated by a divider, come the submenus “Click Ring Size”, “Halo Size” and “Spotlight Size” (each Small/Medium/Large with check mark), then “Highlight Dimming” and “Spotlight Dimming” (each Light/Medium/Strong with check mark) and the toggle “Crosshair While Selecting” (check mark = on). The menu logic uses the same rebuild-on-open mechanism as the colors.
 
 ## Risks / Trade-offs
 
-- [Großer Spotlight auf kleinem Display bzw. großes Halo verdeckt viel] → Gewollt einstellbar, Default bleibt Mittel.
-- [Das Menü wird deutlich länger (5 Untermenüs + Schalter)] → Gruppiert durch Trenner. Ein Einstellungsfenster bleibt Non-Goal, solange das Menü überschaubar ist.
-- [Einheitlicher Akzent ändert das bisherige Aussehen: Der Linksklick-Ring wird von Gelb zu Orange] → Bewusst so gewollt (Proposal). Wer Gelb bevorzugt, stellt es im Menü ein.
-- [Einige Palettenfarben sind auf bestimmten Inhalten schlecht sichtbar, z. B. Gelb auf Weiß] → Das ist der Sinn der Auswahl. Der Rand der Ringe ist kräftig, die Füllung leicht transparent.
-- [Rot/Grün sind für Menschen mit Rot-Grün-Schwäche schwer zu unterscheiden] → Die Defaults Orange/Blau sind gut unterscheidbar. Die Wahl liegt beim Nutzer.
-- [Die Sperre gleicher Farben könnte verwirren („warum ist Orange grau?“)] → Der deaktivierte Eintrag ist klar ausgegraut. Bei Bedarf später ein Tooltip.
+- [A large spotlight on a small display or a large halo covers a lot] → Adjustable on purpose; the default stays Medium.
+- [The menu gets considerably longer (5 submenus + toggle)] → Grouped by dividers. A settings window stays a non-goal while the menu remains manageable.
+- [A single accent changes the existing look: the left-click ring turns from yellow to orange] → Intended (see proposal). Anyone who prefers yellow can choose it in the menu.
+- [Some palette colors are hard to see on certain content, e.g. yellow on white] → That is what the choice is for. The ring border is strong, the fill slightly transparent.
+- [Red and green are hard to tell apart for people with red-green color blindness] → The defaults Orange/Blue are easy to distinguish. The choice is up to the user.
+- [Locking identical colors could confuse (“why is Orange gray?”)] → The disabled item is clearly grayed out. A tooltip can be added later if needed.
 
 ## Migration Plan
 
-Keine Datenmigration: Fehlen die Schlüssel (erster Start nach dem Update), gelten die Defaults Orange/Blau, alle Größen Mittel und Hilfslinien an. Rückbau: Die Schlüssel bleiben ungenutzt in den Defaults liegen und lassen sich mit `defaults delete local.presenter.app <Schlüssel>` entfernen (`accentColor`, `rightClickColor`, `clickRingSize`, `haloSize`, `spotlightSize`, `highlightDimming`, `spotlightDimming`, `showsSelectionGuides`).
+No data migration: if the keys are missing (first launch after the update), the defaults Orange/Blue, all sizes Medium and guides on apply. Removal: the keys remain unused in the defaults and can be removed with `defaults delete local.presenter.app <key>` (`accentColor`, `rightClickColor`, `clickRingSize`, `haloSize`, `spotlightSize`, `highlightDimming`, `spotlightDimming`, `showsSelectionGuides`).

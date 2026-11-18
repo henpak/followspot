@@ -2,71 +2,75 @@
 
 ## Purpose
 
-Ermöglicht es, die Farben der Markierungen direkt im Menüleisten-Menü aus einer festen, für Bildschirmfreigaben geeigneten Palette zu wählen, damit sie zum präsentierten Inhalt passen und gut erkennbar bleiben.
+Lets the user choose the colors of the markings directly in the menu bar menu from a fixed palette suited to screen sharing, so they match the presented content and stay clearly visible.
 
 ## Requirements
 
-### Requirement: Farbpalette
-Die App SHALL genau diese 8 Farben zur Auswahl anbieten: Orange, Gelb, Rot, Pink, Lila, Blau, Türkis, Grün. Jede Farbe MUST kräftig und voll deckend sein, damit sie in komprimierten Video-Streams erkennbar bleibt.
+### Requirement: Color palette
+The app SHALL offer exactly these 8 colors: Orange, Yellow, Red, Pink, Purple, Blue, Teal, Green. Every color MUST be vivid and fully opaque so it stays recognizable in compressed video streams.
 
-#### Scenario: Palette im Menü
-- **WHEN** der Nutzer das Untermenü einer Farbeinstellung öffnet
-- **THEN** werden die 8 Farben jeweils mit Farbpunkt und Namen angezeigt
+#### Scenario: Palette in the menu
+- **WHEN** the user opens the submenu of a color setting
+- **THEN** the 8 colors are shown, each with a color dot and its name
 
-### Requirement: Akzentfarbe
-Die App SHALL eine einstellbare Akzentfarbe haben, die für Linksklick-Ring, Cursor-Halo, Rahmen des Rechteck-Highlights, Fadenkreuz und Auswahlrechteck verwendet wird. Halo und Auswahlrechteck verwenden die Akzentfarbe teiltransparent. Der Standardwert SHALL Orange sein.
+### Requirement: Accent color
+The app SHALL have an adjustable accent color that is used for the left-click ring, cursor halo, rectangle highlight border, crosshair and selection rectangle. Halo and selection rectangle use the accent color semi-transparently. The default SHALL be Orange.
 
-#### Scenario: Standardfarbe beim ersten Start
-- **WHEN** die App zum ersten Mal startet und der Nutzer links klickt
-- **THEN** erscheint der Ring in Orange und ein Rechteck-Highlight hat einen orangen Rahmen
+#### Scenario: Default color at first launch
+- **WHEN** the app launches for the first time and the user left-clicks
+- **THEN** the ring appears in orange and a rectangle highlight has an orange border
 
-#### Scenario: Akzentfarbe ändern
-- **WHEN** der Nutzer im Untermenü „Akzentfarbe“ Grün wählt und danach links klickt, das Halo einschaltet und ein Rechteck aufzieht
-- **THEN** sind Ring, Halo, Fadenkreuz, Auswahlrechteck und Highlight-Rahmen grün
+#### Scenario: Changing the accent color
+- **WHEN** the user chooses Green in the “Accent Color” submenu, then left-clicks, turns the halo on and drags a rectangle
+- **THEN** ring, halo, crosshair, selection rectangle and highlight border are green
 
-### Requirement: Rechtsklick-Farbe
-Die App SHALL eine einstellbare Rechtsklick-Farbe haben, die für Rechtsklick-Ringe (inkl. ctrl+Klick) verwendet wird. Der Standardwert SHALL Blau sein.
+### Requirement: Right-click color
+The app SHALL have an adjustable right-click color that is used for right-click rings (including ctrl-click). The default SHALL be Blue.
 
-#### Scenario: Rechtsklick-Farbe ändern
-- **WHEN** der Nutzer im Untermenü „Rechtsklick-Farbe“ Pink wählt und rechts klickt
-- **THEN** erscheint der Ring in Pink
+#### Scenario: Changing the right-click color
+- **WHEN** the user chooses Pink in the “Right-Click Color” submenu and right-clicks
+- **THEN** the ring appears in pink
 
-### Requirement: Unterscheidbarkeit von Links- und Rechtsklick
-Akzent- und Rechtsklick-Farbe MUST immer verschieden sein. Im Untermenü einer Farbeinstellung SHALL die aktuell für die jeweils andere Einstellung gewählte Farbe nicht auswählbar sein.
+### Requirement: Distinct left- and right-click colors
+Accent color and right-click color MUST always differ. In the submenu of one color setting, the color currently chosen for the other setting SHALL NOT be selectable.
 
-#### Scenario: Gleiche Farbe ist gesperrt
-- **WHEN** die Akzentfarbe Orange ist und der Nutzer das Untermenü „Rechtsklick-Farbe“ öffnet
-- **THEN** ist Orange dort deaktiviert und nicht wählbar
+#### Scenario: Same color is locked
+- **WHEN** the accent color is Orange and the user opens the “Right-Click Color” submenu
+- **THEN** Orange is disabled there and cannot be chosen
 
-#### Scenario: Ungültige gespeicherte Kombination
-- **WHEN** beim Start gespeicherte Werte vorliegen, bei denen beide Farben gleich sind
-- **THEN** behält die App die Akzentfarbe und setzt die Rechtsklick-Farbe auf eine andere Farbe der Palette
+#### Scenario: Invalid stored combination
+- **WHEN** at launch the stored values have both colors set to the same color
+- **THEN** the app keeps the accent color and sets the right-click color to another palette color
 
-### Requirement: Farbwahl im Menü
-Das Menüleisten-Menü SHALL die Einträge „Akzentfarbe“ und „Rechtsklick-Farbe“ jeweils als Untermenü enthalten; die aktive Farbe MUST mit Häkchen markiert sein und das Haupt-Menü MUST die aktive Farbe am Eintrag erkennen lassen (Farbpunkt).
+### Requirement: Choosing colors in the menu
+The menu bar menu SHALL contain the items “Accent Color” and “Right-Click Color”, each as a submenu; the active color MUST carry a check mark and the main menu MUST show the active color at the item (color dot).
 
-#### Scenario: Aktive Farbe erkennbar
-- **WHEN** die Rechtsklick-Farbe Blau ist und der Nutzer das Menü öffnet
-- **THEN** zeigt der Eintrag „Rechtsklick-Farbe“ einen blauen Farbpunkt und im Untermenü ist Blau mit Häkchen markiert
+#### Scenario: Active color visible
+- **WHEN** the right-click color is Blue and the user opens the menu
+- **THEN** the item “Right-Click Color” shows a blue color dot and Blue carries a check mark in the submenu
 
-### Requirement: Sofortige Wirkung
-Eine Farbänderung SHALL sofort wirken, ohne Neustart: auch auf gerade sichtbare Markierungen (Halo, Rechteck-Highlight). Bereits laufende Ring-Animationen laufen in der alten Farbe aus.
+### Requirement: Immediate effect
+A color change SHALL take effect immediately, without a restart, including on markings that are currently visible (halo, rectangle highlight). Ring animations already running finish in the old color.
 
-#### Scenario: Halo ist aktiv
-- **WHEN** das Cursor-Halo eingeschaltet ist und der Nutzer die Akzentfarbe ändert
-- **THEN** wechselt das Halo sofort in die neue Farbe
+#### Scenario: Halo is active
+- **WHEN** the cursor halo is on and the user changes the accent color
+- **THEN** the halo switches to the new color immediately
 
-#### Scenario: Highlight ist aktiv
-- **WHEN** ein Rechteck-Highlight sichtbar ist und der Nutzer über das Menü die Akzentfarbe ändert
-- **THEN** wechselt der Rahmen in die neue Farbe und das Highlight bleibt bestehen
+#### Scenario: Highlight is active
+- **WHEN** a rectangle highlight is visible and the user changes the accent color from the menu
+- **THEN** the border switches to the new color and the highlight stays
 
-### Requirement: Farben bleiben gespeichert
-Die gewählten Farben SHALL über Beenden und Neustart der App erhalten bleiben. Unbekannte oder fehlende gespeicherte Werte MUST auf die Standardfarben zurückfallen.
+### Requirement: Colors are remembered
+The chosen colors SHALL persist across quitting and relaunching the app. Unknown or missing stored values MUST fall back to the default colors. Colors chosen under the app's former name “Presenter” SHALL be taken over.
 
-#### Scenario: Neustart
-- **WHEN** der Nutzer die Akzentfarbe auf Türkis setzt, die App beendet und neu startet
-- **THEN** ist die Akzentfarbe weiterhin Türkis
+#### Scenario: Relaunch
+- **WHEN** the user sets the accent color to Teal, quits the app and launches it again
+- **THEN** the accent color is still Teal
 
-#### Scenario: Unbekannter gespeicherter Wert
-- **WHEN** der gespeicherte Wert keiner Palettenfarbe entspricht
-- **THEN** verwendet die App die Standardfarbe für diese Einstellung
+#### Scenario: Unknown stored value
+- **WHEN** the stored value does not match any palette color
+- **THEN** the app uses the default color for that setting
+
+#### Scenario: Takeover from Presenter
+- **WHEN** the user previously used the app under the name “Presenter” and launches Followspot for the first time
+- **THEN** the previously chosen colors still apply

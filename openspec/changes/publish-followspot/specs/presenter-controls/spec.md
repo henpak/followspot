@@ -2,56 +2,56 @@
 
 ## MODIFIED Requirements
 
-### Requirement: Systemweite Hotkeys
-Die App SHALL folgende Tastenkürzel systemweit bereitstellen, unabhängig davon, welche App im Vordergrund ist: `opt+F1` schaltet die Rechteck-Highlight-Funktion um (Auswahl starten bzw. laufende Auswahl abbrechen oder sichtbares Highlight entfernen), `opt+F2` schaltet Spotlight um, `opt+F3` schaltet das Cursor-Halo um, `opt+F4` schaltet die Klick-Ringe um. Jedes Kürzel MUST nur seine eigene Funktion beeinflussen. Die früheren Kürzel `ctrl+opt+H/S/C` MUST NOT mehr abgefangen werden.
+### Requirement: System-wide shortcuts
+The app SHALL provide the following shortcuts system-wide, regardless of which app is in front: `opt+F1` toggles the rectangle highlight feature (starts a selection, or cancels a running selection or removes a visible highlight), `opt+F2` toggles the spotlight, `opt+F3` toggles the cursor halo, `opt+F4` toggles the click rings. Each shortcut MUST affect only its own feature. The former shortcuts `ctrl+opt+H/S/C` MUST NOT be captured anymore.
 
-#### Scenario: Hotkey in fremder App
-- **WHEN** eine andere App im Vordergrund ist und der Nutzer `opt+F2` drückt
-- **THEN** schaltet sich der Spotlight um, ohne dass die App den Fokus verliert
+#### Scenario: Shortcut in another app
+- **WHEN** another app is in front and the user presses `opt+F2`
+- **THEN** the spotlight toggles without that app losing focus
 
-#### Scenario: Rechteck-Auswahl per Hotkey
-- **WHEN** weder Auswahl noch Highlight aktiv sind und der Nutzer `opt+F1` drückt
-- **THEN** beginnt die Rechteck-Auswahl
+#### Scenario: Rectangle selection by shortcut
+- **WHEN** neither a selection nor a highlight is active and the user presses `opt+F1`
+- **THEN** the rectangle selection begins
 
-#### Scenario: Halo per Hotkey
-- **WHEN** der Nutzer `opt+F3` drückt
-- **THEN** schaltet sich das Cursor-Halo um
+#### Scenario: Halo by shortcut
+- **WHEN** the user presses `opt+F3`
+- **THEN** the cursor halo toggles
 
-#### Scenario: Halo bleibt beim Entfernen des Highlights
-- **WHEN** das Cursor-Halo an ist, ein Rechteck-Highlight sichtbar ist und der Nutzer `opt+F1` drückt
-- **THEN** verschwindet das Highlight und das Halo bleibt an
+#### Scenario: Halo stays when the highlight is removed
+- **WHEN** the cursor halo is on, a rectangle highlight is visible and the user presses `opt+F1`
+- **THEN** the highlight disappears and the halo stays on
 
-#### Scenario: Klick-Ringe per Hotkey
-- **WHEN** die Klick-Ringe an sind und der Nutzer `opt+F4` drückt
-- **THEN** erzeugen folgende Klicks keine Ringe mehr, und der Menüeintrag „Click Rings“ ist ohne Häkchen
+#### Scenario: Click rings by shortcut
+- **WHEN** click rings are on and the user presses `opt+F4`
+- **THEN** subsequent clicks no longer produce rings, and the menu item “Click Rings” has no check mark
 
-#### Scenario: Alte Kürzel frei
-- **WHEN** die App läuft und der Nutzer in einer anderen App `ctrl+opt+S` drückt
-- **THEN** reagiert Followspot nicht und die Vordergrund-App erhält den Tastendruck
+#### Scenario: Former shortcuts are free
+- **WHEN** the app is running and the user presses `ctrl+opt+S` in another app
+- **THEN** Followspot does not react and the app in front receives the keystroke
 
-#### Scenario: Esc bleibt bei der App
-- **WHEN** Halo, Spotlight, eine Auswahl oder ein Highlight aktiv ist und der Nutzer Esc drückt
-- **THEN** reagiert Followspot nicht, alle Funktionen bleiben unverändert und die Vordergrund-App erhält das Esc
+#### Scenario: Esc stays with the app
+- **WHEN** the halo, spotlight, a selection or a highlight is active and the user presses Esc
+- **THEN** Followspot does not react, all features stay unchanged and the app in front receives the Esc
 
-#### Scenario: Hotkey bereits belegt
-- **WHEN** ein Tastenkürzel beim Start nicht registriert werden kann
-- **THEN** startet die App trotzdem und das Menü zeigt an, welches Kürzel nicht verfügbar ist
+#### Scenario: Shortcut already taken
+- **WHEN** a shortcut cannot be registered at launch
+- **THEN** the app still starts and the menu shows which shortcut is unavailable
 
-### Requirement: Menüleisten-Menü
-Die App SHALL ausschließlich als Symbol in der Menüleiste erscheinen (kein Dock-Symbol, kein Fenster beim Start). Das Menü MUST Schalter für Klick-Ringe, Cursor-Halo, Spotlight und „Highlight Area“ mit sichtbarem Ein/Aus-Zustand, die zugehörigen Tastenkürzel sowie „Quit Followspot“ enthalten. „Highlight Area“ MUST als aktiv markiert sein, solange eine Auswahl läuft oder ein Highlight sichtbar ist, und MUST beim Auswählen wie `opt+F1` umschalten.
+### Requirement: Menu bar menu
+The app SHALL appear only as an icon in the menu bar (no Dock icon, no window at launch). The menu MUST contain toggles for click rings, cursor halo, spotlight and “Highlight Area” with a visible on/off state, the corresponding shortcuts, and “Quit Followspot”. “Highlight Area” MUST be shown as active while a selection is running or a highlight is visible, and MUST toggle like `opt+F1` when chosen.
 
-#### Scenario: App starten
-- **WHEN** der Nutzer die App startet
-- **THEN** erscheint nur ein Symbol in der Menüleiste und kein Dock-Symbol
+#### Scenario: Launching the app
+- **WHEN** the user launches the app
+- **THEN** only an icon appears in the menu bar and no Dock icon
 
-#### Scenario: Zustand im Menü
-- **WHEN** Spotlight per Hotkey eingeschaltet wurde und der Nutzer das Menü öffnet
-- **THEN** ist der Spotlight-Eintrag als aktiv markiert
+#### Scenario: State in the menu
+- **WHEN** the spotlight was turned on by shortcut and the user opens the menu
+- **THEN** the spotlight item is shown as active
 
-#### Scenario: Highlight-Zustand im Menü
-- **WHEN** ein Rechteck-Highlight sichtbar ist und der Nutzer das Menü öffnet
-- **THEN** ist „Highlight Area“ als aktiv markiert
+#### Scenario: Highlight state in the menu
+- **WHEN** a rectangle highlight is visible and the user opens the menu
+- **THEN** “Highlight Area” is shown as active
 
-#### Scenario: Beenden
-- **WHEN** der Nutzer im Menü „Quit Followspot“ wählt
-- **THEN** werden alle Markierungen entfernt und die App beendet sich
+#### Scenario: Quitting
+- **WHEN** the user chooses “Quit Followspot” in the menu
+- **THEN** all markings are removed and the app quits

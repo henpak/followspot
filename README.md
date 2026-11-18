@@ -40,6 +40,8 @@ curl -fsSL https://raw.githubusercontent.com/henpak/followspot/main/scripts/inst
 
 The script downloads the latest release, verifies its SHA-256 checksum, installs
 `Followspot.app` into `~/Applications` and starts it. Run the same command again to update.
+No Gatekeeper prompt appears with this method, because files downloaded with `curl` are not
+quarantined.
 Read the [script](scripts/install.sh) first if you like. It is short.
 
 ### Manual download
@@ -47,11 +49,12 @@ Read the [script](scripts/install.sh) first if you like. It is short.
 1. Download `Followspot.zip` from the [latest release](https://github.com/henpak/followspot/releases/latest)
    and unzip it.
 2. Move `Followspot.app` to `Applications` (or `~/Applications`).
-3. Open it. Followspot is open source but not notarized by Apple, so macOS blocks the first
-   launch of a downloaded copy. To allow it, choose one of:
+3. Open it. Because the app is downloaded through a browser, macOS blocks the first launch:
+   Followspot is open source and signed ad-hoc, but not notarized by Apple (that requires a paid
+   Apple Developer membership). Allow it once, in one of two ways:
    - **System Settings → Privacy & Security**, scroll down and click **Open Anyway** next to the
      Followspot message, then confirm.
-   - Or run once in Terminal:
+   - Or run in Terminal:
      ```sh
      xattr -dr com.apple.quarantine /Applications/Followspot.app
      ```
@@ -162,8 +165,8 @@ scripts/package-app.sh --universal --zip   # release bundle + zip in build/
 
 - `Sources/FollowspotCore`: AppKit-free logic (state machine, geometry, settings), fully unit tested
 - `Sources/Followspot`: the menu bar app (AppKit, Core Animation, Carbon hotkeys)
-- `openspec/`: requirements and design decisions, written with [OpenSpec](https://github.com/Fission-AI/OpenSpec)
-  (in German). `openspec/specs/` describes the current behavior, and `openspec/changes/archive/` records
+- `openspec/`: requirements and design decisions, written with [OpenSpec](https://github.com/Fission-AI/OpenSpec).
+  `openspec/specs/` describes the current behavior, and `openspec/changes/archive/` records
   how and why it got there.
 
 Releases are built by GitHub Actions: pushing a tag like `v1.2.3` runs the tests, builds a

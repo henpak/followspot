@@ -2,63 +2,63 @@
 
 ## Context
 
-Die Hotkeys werden per Carbon `RegisterEventHotKey` registriert (siehe `add-presenter-overlay`, Decision 6). Das braucht keine Berechtigung, und der Tastendruck wird verbraucht. Die Belegung steht fest in `HotkeyAction`:
+The hotkeys are registered with Carbon `RegisterEventHotKey` (see `add-presenter-overlay`, Decision 6). This needs no permission, and the keystroke is consumed. The layout is hard-coded in `HotkeyAction`:
 
 - `keyCode`
 - `carbonModifiers`
-- `menuKey` und `displayShortcut` für die Anzeige im Menü
+- `menuKey` and `displayShortcut` for display in the menu
 
-Das Menü übernimmt `menuKey` als Key-Equivalent und setzt die Modifier-Maske fest auf `[.control, .option]`.
+The menu takes `menuKey` as its key equivalent and hard-codes the modifier mask to `[.control, .option]`.
 
-Relevante Gegebenheiten auf diesem Mac:
+Relevant facts on the developer's Mac:
 
-- Tastaturbelegung ABC-QWERTZ.
-- „F1, F2 usw. als Standard-Funktionstasten verwenden“ ist **an** (`com.apple.keyboard.fnState = 1`). Die oberen Tasten liefern also F1… ohne fn.
-- `⌥F1–F3` sind weder als macOS-Systemkürzel belegt (die Tastaturnavigation nutzt `⌃F1–F8`) noch erzeugen sie ein Zeichen.
+- Keyboard layout ABC-QWERTZ.
+- “Use F1, F2, etc. keys as standard function keys” is **on** (`com.apple.keyboard.fnState = 1`). The top-row keys therefore send F1… without fn.
+- `⌥F1–F3` are neither macOS system shortcuts (keyboard navigation uses `⌃F1–F8`) nor do they produce a character.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Kürzel mit einem Modifier, die einhändig zu greifen sind, ohne Zeichen- oder System-Konflikt.
-- Die Anzeige im Menü (Kürzel am Eintrag, Warnhinweis) stimmt automatisch mit der Registrierung überein.
+- Shortcuts with one modifier that can be reached with one hand, without character or system conflicts.
+- The display in the menu (shortcut at the item, warning) automatically matches the registration.
 
 **Non-Goals:**
-- Frei konfigurierbare Kürzel (Recorder im Menü, Speicherung in UserDefaults).
-- Die alten `⌃⌥`-Kürzel zusätzlich als Alias behalten.
-- Erkennen, ob eine andere App `⌥F1–F3` belegt: Carbon-Hotkeys haben Vorrang vor App-Kürzeln.
+- Freely configurable shortcuts (recorder in the menu, persistence in UserDefaults).
+- Keeping the old `⌃⌥` shortcuts as aliases.
+- Detecting whether another app uses `⌥F1–F3`: Carbon hotkeys take precedence over app shortcuts.
 
 ## Decisions
 
-### 1. Zuordnung F1 = Highlight, F2 = Spotlight, F3 = Halo
+### 1. Mapping F1 = highlight, F2 = spotlight, F3 = halo
 
-Das Highlight wird am häufigsten genutzt und liegt auf der äußersten, am leichtesten blind zu treffenden Taste. Spotlight und Halo folgen in der Reihenfolge der bisherigen Bedienung (H, S, C).
+The highlight is used most and sits on the outermost key, the easiest to hit blindly. Spotlight and halo follow in the order of the previous layout (H, S, C).
 
-Verworfen: die Menüreihenfolge (Halo, Spotlight, Highlight). Sie ist historisch gewachsen und nicht nach Häufigkeit sortiert.
+Rejected: the menu order (halo, spotlight, highlight). It grew historically and is not sorted by frequency.
 
-`⌥F4` schaltet die Klick-Ringe um. Sie waren bisher nur über das Menü schaltbar und kommen als neue `HotkeyAction` hinzu, mit dem Rohwert 5, damit die IDs der bestehenden Aktionen stabil bleiben. Die Aktion wird dauerhaft registriert wie F1–F3. Esc schaltet die Klick-Ringe weiterhin nicht ab, weil sie eine Grundeinstellung sind und keine temporäre Markierung.
+`⌥F4` toggles the click rings. So far they could only be switched from the menu; they are added as a new `HotkeyAction` with raw value 5, so the IDs of the existing actions stay stable. The action is registered permanently like F1–F3. Esc still does not turn the click rings off, because they are a base setting and not a temporary marking.
 
-### 2. Modifier als Eigenschaft von `HotkeyAction`, Menü leitet die Maske daraus ab
+### 2. Modifiers as a property of `HotkeyAction`, the menu derives the mask from it
 
-`HotkeyAction` bekommt neben `carbonModifiers` eine passende `menuModifiers: NSEvent.ModifierFlags`. `StatusMenu` nimmt diese, statt `[.control, .option]` fest zu verdrahten. So stehen Registrierung und Anzeige an einer Stelle, und ein künftiger Wechsel betrifft nur `HotkeyAction`.
+Next to `carbonModifiers`, `HotkeyAction` gets a matching `menuModifiers: NSEvent.ModifierFlags`. `StatusMenu` uses it instead of hard-coding `[.control, .option]`. That keeps registration and display in one place, and a future change only touches `HotkeyAction`.
 
-Verworfen: die Maske in `StatusMenu` auf `[.option]` ändern. Das ist kleiner, aber die Duplikation bleibt.
+Rejected: changing the mask in `StatusMenu` to `[.option]`. That is smaller, but the duplication remains.
 
-### 3. F-Tasten im Menü über die Funktionstasten-Codepoints
+### 3. F-keys in the menu through the function key code points
 
-`menuKey` liefert für F1–F3 `String(UnicodeScalar(NSF1FunctionKey)!)` usw. AppKit stellt diese Codepoints im Menü als „F1“ dar, zusammen mit der Modifier-Maske also als `⌥F1`. Die Key-Codes für Carbon sind `kVK_F1`, `kVK_F2` und `kVK_F3`.
+For F1–F3, `menuKey` returns `String(UnicodeScalar(NSF1FunctionKey)!)` and so on. AppKit shows these code points in the menu as “F1”, together with the modifier mask as `⌥F1`. The Carbon key codes are `kVK_F1`, `kVK_F2` and `kVK_F3`.
 
-### 4. Specs kürzelneutral, wo das Kürzel nur Mittel zum Zweck ist
+### 4. Specs without shortcuts where the shortcut is only a means to an end
 
-Die Szenarien in `marking-appearance` testen die Hilfslinien, nicht das Kürzel. Sie sprechen deshalb nur noch vom „Starten der Rechteck-Auswahl“. Die konkreten Kürzel stehen allein in `presenter-controls`.
+The scenarios in `marking-appearance` test the guides, not the shortcut. They therefore only speak of “starting the rectangle selection”. The concrete shortcuts are defined only in `presenter-controls`.
 
 ## Risks / Trade-offs
 
-- **fnState wird umgestellt:** Schaltet der Nutzer die Systemeinstellung „F1, F2 usw. als Standard-Funktionstasten“ aus, liefern die oberen Tasten Helligkeit usw. Die Kürzel sind dann `fn⌥F1`. → Das README nennt diese Abhängigkeit.
-- **App-Kürzel werden überdeckt:** Einzelne Apps nutzen `⌥F1–F3`, z. B. JetBrains-IDEs („Select In“ auf `⌥F1`). Solange Presenter läuft, kommen diese dort nicht an. → Wird akzeptiert. Falls es stört, ist eine konfigurierbare Belegung ein eigener späterer Change.
-- **Registrierung schlägt fehl:** Belegt eine andere App das Kürzel bereits global, greift der bestehende Warnhinweis im Menü. → Kein zusätzlicher Aufwand.
+- **fnState is switched:** if the user turns off the system setting “Use F1, F2, etc. keys as standard function keys”, the top-row keys send brightness and so on. The shortcuts are then `fn⌥F1`. → The README mentions this dependency.
+- **App shortcuts are shadowed:** some apps use `⌥F1–F3`, e.g. JetBrains IDEs (“Select In” on `⌥F1`). While Presenter runs, these do not reach them. → Accepted. If it gets in the way, a configurable layout is a separate later change.
+- **Registration fails:** if another app already holds the shortcut globally, the existing warning in the menu applies. → No additional effort.
 
 ## Migration Plan
 
-- Neu bauen und installieren mit `scripts/build-app.sh --open`. Die Einstellungen in UserDefaults sind nicht betroffen.
-- Rollback: auf den vorherigen Commit zurückgehen und neu bauen.
-- Archivierung: Zuerst `add-presenter-overlay` und `add-marking-colors` archivieren, dann diesen Change. Die MODIFIED-Deltas setzen voraus, dass `presenter-controls` und `marking-appearance` bereits als Haupt-Specs existieren.
+- Rebuild and install with `scripts/build-app.sh --open`. The settings in UserDefaults are not affected.
+- Rollback: go back to the previous commit and rebuild.
+- Archiving: archive `add-presenter-overlay` and `add-marking-colors` first, then this change. The MODIFIED deltas require `presenter-controls` and `marking-appearance` to exist as main specs.

@@ -2,55 +2,59 @@
 
 ## Context
 
-Bisher ist die App ein Eigenbau: Bundle-ID `local.presenter.app`, Signatur mit dem persönlichen „Apple Development“-Zertifikat, Installation nur über `scripts/build-app.sh`. Es gibt keine Apple-Developer-Mitgliedschaft, also auch keine Notarisierung. Die App braucht keine Berechtigungen (globale Maus-Monitore, Carbon-Hotkeys).
+So far the app has been a personal tool: bundle ID `local.presenter.app`, signed with a personal “Apple Development” certificate, installed only through `scripts/build-app.sh`. There is no Apple Developer membership, and therefore no notarization. The app needs no permissions (global mouse monitors, Carbon hotkeys).
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Installation für Fremde ohne Xcode: Einzeiler oder ZIP.
-- Reproduzierbare Releases aus GitHub Actions.
-- Keine persönlichen Daten oder lokalen Einstellungen im öffentlichen Repo.
+- Installation for others without Xcode: one-line installer or ZIP.
+- Reproducible releases from GitHub Actions.
+- No personal data or machine-specific settings in the public repository.
 
 **Non-Goals:**
-- Homebrew-Cask, Notarisierung, Auto-Update, Lokalisierung.
+- Homebrew cask, notarization, auto-update, localization.
 
 ## Decisions
 
-### 1. Name Followspot, Bundle-ID unter `io.github.henpak`
+### 1. Name Followspot, bundle ID under `io.github.henpak`
 
-Followspot ist der Verfolger-Scheinwerfer im Theater. Unter Mac-Cursor-Tools ist der Name frei, Limelight, Glint und ClickLight sind vergeben. Die Bundle-ID nutzt die GitHub-Domain des Kontos, weil es keine eigene Projekt-Domain gibt.
+A followspot is the theatre spotlight that follows the performer. Among Mac cursor tools the name is free, while Limelight, Glint and ClickLight are taken. The bundle ID uses the account's GitHub domain because there is no project domain.
 
-Die Capability `presenter-controls` behält ihren Namen. Sie beschreibt die Bedienung, nicht das Produkt.
+The capability `presenter-controls` keeps its name; it describes how the app is operated, not the product.
 
-### 2. Ad-hoc-Signatur
+### 2. Ad-hoc signature
 
-Ohne Developer-ID ist eine Ad-hoc-Signatur (`codesign -s -`) das Beste. Sie reicht für Apple Silicon. Weil die App keine TCC-Berechtigungen braucht, schadet es nicht, dass sich die Signatur mit jedem Build ändert. `FOLLOWSPOT_SIGN_IDENTITY` erlaubt weiterhin ein eigenes Zertifikat.
+Without a Developer ID, an ad-hoc signature (`codesign -s -`) is the best option and is sufficient on Apple Silicon. Because the app needs no TCC permissions, the signature changing with every build does no harm. `FOLLOWSPOT_SIGN_IDENTITY` still allows a custom certificate.
 
-### 3. Installation per curl umgeht Gatekeeper legitim
+### 3. Installing with curl legitimately avoids the Gatekeeper prompt
 
-Mit `curl` geladene Dateien bekommen kein `com.apple.quarantine`-Attribut, deshalb startet die App ohne Warnung. Der Installer prüft trotzdem die SHA-256-Prüfsumme aus dem Release und entfernt ein eventuell vorhandenes Attribut. Für den ZIP-Download aus dem Browser beschreibt die README „Open Anyway“ bzw. `xattr -dr com.apple.quarantine`.
+Files downloaded with `curl` get no `com.apple.quarantine` attribute, so the app starts without a prompt. The installer still verifies the SHA-256 checksum from the release and removes any quarantine attribute. For a browser download, the README describes “Open Anyway” and `xattr -dr com.apple.quarantine`.
 
-Die Release-Assets heißen fest `Followspot.zip` und `Followspot.zip.sha256`. So funktioniert `releases/latest/download/…` ohne API-Aufruf.
+The release assets are always named `Followspot.zip` and `Followspot.zip.sha256`, so `releases/latest/download/…` works without an API call.
 
-### 4. Einmalige Übernahme der Einstellungen
+### 4. One-time takeover of settings
 
-`SettingsMigration` in `FollowspotCore` ist eine reine Funktion `migrate(legacy: [String: Any]?, into: UserDefaults)`:
-- Sie kopiert die bekannten Schlüssel, die im Ziel fehlen.
-- Danach setzt sie `migratedFromLegacyDomain`.
-- Ist das Flag schon gesetzt, macht sie nichts.
+`SettingsMigration` in `FollowspotCore` is a pure function `migrate(legacy: [String: Any]?, into: UserDefaults)`:
+- It copies the known keys that are missing in the target.
+- It then sets `migratedFromLegacyDomain`.
+- If that flag is already set, it does nothing.
 
-Die App liest die alte Domain mit `UserDefaults.standard.persistentDomain(forName: "local.presenter.app")` und ruft die Migration in `main()` auf, bevor `AppDelegate` und `OverlayController` die Stores laden. Die alte Domain bleibt unangetastet, sie gilt als Backup.
+The app reads the old domain with `UserDefaults.standard.persistentDomain(forName: "local.presenter.app")` and runs the migration in `main()`, before `AppDelegate` and `OverlayController` load the stores. The old domain is left untouched as a backup.
 
-### 5. Universal-Binary in Release und CI
+### 5. Universal binary in releases and CI
 
-`swift build -c release --arch arm64 --arch x86_64` erzeugt ein Universal-Binary unter `.build/apple/Products/Release`. Der Pfad kommt aus `--show-bin-path` mit denselben Argumenten.
+`swift build -c release --arch arm64 --arch x86_64` produces a universal binary under `.build/apple/Products/Release`. The path comes from `--show-bin-path` with the same arguments.
+
+### 6. English only
+
+The UI strings, specs and all change documents are in English, so the repository is consistent for an international audience. The archived changes are translated as well; their content and decisions are unchanged.
 
 ## Risks / Trade-offs
 
-- **Gatekeeper beim Browser-Download:** Nutzer müssen einmal „Open Anyway“ wählen. → Der Einzeiler ist in der README der empfohlene Weg.
-- **Intel-Macs:** Ein ad-hoc signiertes x86_64-Binary läuft, wurde aber nur gebaut, nicht auf echter Hardware getestet. → In der README als „untested“ vermerkt.
-- **Umbenennung:** Eine alte `Presenter.app` bliebe parallel installiert. → `build-app.sh` entfernt sie lokal. Für andere gibt es sie nicht, weil sie nie veröffentlicht wurde.
+- **Gatekeeper on browser downloads:** users have to choose “Open Anyway” once. → The README recommends the one-line installer.
+- **Intel Macs:** the ad-hoc signed x86_64 binary is built but not tested on real hardware. → Marked as untested in the README.
+- **Renaming:** an old `Presenter.app` would stay installed next to the new app. → `build-app.sh` removes it locally; it was never published, so nobody else has it.
 
 ## Migration Plan
 
-Neu bauen mit `scripts/build-app.sh --open`. Die Einstellungen werden übernommen, `Presenter.app` wird entfernt. Rollback: alte Historie aus dem Git-Bundle wiederherstellen.
+Rebuild with `scripts/build-app.sh --open`. Settings are taken over and `Presenter.app` is removed. Rollback: restore the old history from the git bundle.

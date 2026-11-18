@@ -11,7 +11,7 @@ public struct RGB: Equatable, Sendable {
     }
 }
 
-/// The fixed palette of marking colours (spec marking-colors: Farbpalette).
+/// The fixed palette of marking colours (spec marking-colors: Color palette).
 ///
 /// The raw value is the stable ID that is persisted – names and tones may be
 /// adjusted later without invalidating stored settings (design.md, Decision 1).

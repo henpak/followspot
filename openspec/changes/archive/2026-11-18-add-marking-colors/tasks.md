@@ -1,35 +1,35 @@
 # Tasks
 
-## 1. Palette und Regeln (PresenterCore)
+## 1. Palette and rules (PresenterCore)
 
-- [x] 1.1 `PaletteColor` (8 Farben mit stabiler ID, deutschem Namen, sRGB-Werten laut design.md Decision 1) in `PresenterCore` anlegen; Unit-Tests prüfen Anzahl/Reihenfolge, eindeutige IDs und Namen; verifizieren: `swift test` grün
-- [x] 1.2 `MarkingColors` mit Defaults (Orange/Blau), Fallback für unbekannte/fehlende IDs, Korrektur gleicher Farben (Akzent bleibt, Rechtsklick weicht aus – auch für Akzent = Blau), `setAccent`/`setRightClick` mit Ablehnung belegter Farben und `isSelectable` implementieren; Unit-Tests für alle Szenarien der Spec-Anforderungen „Unterscheidbarkeit“ und „Farben bleiben gespeichert“; verifizieren: `swift test` grün
-- [x] 1.3 `ColorStore` (Laden/Speichern der Palette-IDs unter `accentColor`/`rightClickColor` in injizierbaren `UserDefaults`) implementieren; Unit-Tests mit eigener Defaults-Suite für Round-Trip, fehlende Schlüssel und unbekannte Werte; verifizieren: `swift test` grün
+- [x] 1.1 Create `PaletteColor` (8 colors with stable ID, display name, sRGB values as in design.md Decision 1) in `PresenterCore`; unit tests check count/order, unique IDs and names; verify: `swift test` green
+- [x] 1.2 Implement `MarkingColors` with defaults (Orange/Blue), fallback for unknown/missing IDs, correction of identical colors (accent stays, right click moves away, also for accent = Blue), `setAccent`/`setRightClick` rejecting taken colors, and `isSelectable`; unit tests for all scenarios of the spec requirements “Distinct left- and right-click colors” and “Colors are remembered”; verify: `swift test` green
+- [x] 1.3 Implement `ColorStore` (load/save the palette IDs under `accentColor`/`rightClickColor` in injectable `UserDefaults`); unit tests with a dedicated defaults suite for round trip, missing keys and unknown values; verify: `swift test` green
 
-## 2. Darstellung
+## 2. Rendering
 
-- [x] 2.1 Feste Markierungsfarben in `Style` durch von `PaletteColor` abgeleitete Farben ersetzen (Deckkraftwerte laut design.md Decision 5; `otherClickColor`, `dimColor`, `selectionCatcherColor` bleiben fest); verifizieren: `swift build` ohne Warnungen, keine Verwendung der alten Konstanten mehr (`grep`)
-- [x] 2.2 `OverlayView.applyColors(_:)` implementieren (Halo, Highlight-Rahmen, Fadenkreuz, Auswahlrechteck ohne Animation umfärben; Ringfarben für neue Ringe merken) und über `OverlayManager.applyColors(_:)` an alle Panels verteilen, inkl. neu angelegter Panels in `rebuild()`; verifizieren: mit Default-Farben sieht alles wie bisher aus, außer dass Linksklick-Ring und Halo orange statt gelb sind
-- [x] 2.3 `OverlayController` hält `colors` (beim Start aus `ColorStore` geladen), speichert und verteilt bei jeder Änderung; verifizieren: Akzentfarbe per Menü ändern → Halo und sichtbares Highlight wechseln sofort die Farbe, Highlight bleibt bestehen
+- [x] 2.1 Replace the fixed marking colors in `Style` with colors derived from `PaletteColor` (opacity values as in design.md Decision 5; `otherClickColor`, `dimColor`, `selectionCatcherColor` stay fixed); verify: `swift build` without warnings, the old constants are no longer used (`grep`)
+- [x] 2.2 Implement `OverlayView.applyColors(_:)` (recolor halo, highlight border, crosshair and selection rectangle without animation; remember ring colors for new rings) and distribute it to all panels through `OverlayManager.applyColors(_:)`, including panels created in `rebuild()`; verify: with the default colors everything looks as before, except that the left-click ring and halo are orange instead of yellow
+- [x] 2.3 `OverlayController` holds `colors` (loaded from `ColorStore` at launch), saves and distributes them on every change; verify: changing the accent color in the menu → halo and a visible highlight change color immediately, the highlight stays
 
-## 3. Menü
+## 3. Menu
 
-- [x] 3.1 Farbpunkt-Bilder (ca. 12 pt, dünner Rand, abgeschwächte Variante für deaktiviert) erzeugen; verifizieren: Gelb ist im hellen und dunklen Menü erkennbar
-- [x] 3.2 Untermenüs „Akzentfarbe“ und „Rechtsklick-Farbe“ in `StatusMenu` (Farbpunkt am Haupteintrag, 8 Einträge mit Farbpunkt + Name, Häkchen für aktive Farbe, belegte Farbe der anderen Einstellung deaktiviert) und an `OverlayController` anbinden; verifizieren: alle Szenarien der Spec-Anforderungen „Farbpalette“, „Farbwahl im Menü“ und „Unterscheidbarkeit“ manuell durchspielen
-- [x] 3.3 README-Abschnitt „Bedienung“ um die Farbwahl ergänzen (zwei Einstellungen, was sie färben, Sperre gleicher Farben, Speicherung); verifizieren: README beschreibt die Menüeinträge so, wie sie erscheinen
+- [x] 3.1 Create color dot images (about 12 pt, thin border, faded variant for disabled); verify: yellow is visible in the light and dark menu
+- [x] 3.2 Add the submenus “Accent Color” and “Right-Click Color” to `StatusMenu` (color dot at the main item, 8 items with color dot + name, check mark at the active color, the color taken by the other setting disabled) and connect them to `OverlayController`; verify: walk through all scenarios of the spec requirements “Color palette”, “Choosing colors in the menu” and “Distinct left- and right-click colors” manually
+- [x] 3.3 Extend the README usage section with the color choice (two settings, what they color, lock on identical colors, persistence); verify: the README describes the menu items as they appear
 
-## 4. Größen, Abdunklung und Hilfslinien: Logik (PresenterCore)
+## 4. Sizes, dimming and guides: logic (PresenterCore)
 
-- [x] 4.1 `MarkingSize` (small/medium/large mit stabiler ID und Anzeigenamen Klein/Mittel/Groß) und `AppearanceSettings` (drei Größen + Hilfslinien-Schalter, Defaults Mittel/an, Fallback für unbekannte/fehlende Werte) laut design.md Decision 7 anlegen; Unit-Tests für Defaults, Fallbacks und Unabhängigkeit der drei Größen; verifizieren: `swift test` grün
-- [x] 4.2 `AppearanceStore` (Schlüssel `clickRingSize`, `haloSize`, `spotlightSize`, `showsSelectionGuides`; fehlender Bool = an) implementieren; Unit-Tests mit eigener Defaults-Suite für Round-Trip, fehlende Schlüssel und unbekannte Werte; verifizieren: `swift test` grün
-- [x] 4.3 `DimLevel` (light/medium/strong, Leicht/Mittel/Stark, Deckkraft 25/40/60 %) anlegen und `AppearanceSettings`/`AppearanceStore` um `highlightDimming`/`spotlightDimming` (Default Mittel, Schlüssel laut design.md Decision 8a) erweitern; Unit-Tests für Deckkraftwerte, Defaults, Fallbacks, Unabhängigkeit und Round-Trip; verifizieren: `swift test` grün
+- [x] 4.1 Create `MarkingSize` (small/medium/large with stable ID and display names Small/Medium/Large) and `AppearanceSettings` (three sizes + guide toggle, defaults Medium/on, fallback for unknown/missing values) as in design.md Decision 7; unit tests for defaults, fallbacks and independence of the three sizes; verify: `swift test` green
+- [x] 4.2 Implement `AppearanceStore` (keys `clickRingSize`, `haloSize`, `spotlightSize`, `showsSelectionGuides`; missing Bool = on); unit tests with a dedicated defaults suite for round trip, missing keys and unknown values; verify: `swift test` green
+- [x] 4.3 Create `DimLevel` (light/medium/strong, Light/Medium/Strong, opacity 25/40/60 %) and extend `AppearanceSettings`/`AppearanceStore` with `highlightDimming`/`spotlightDimming` (default Medium, keys as in design.md Decision 8a); unit tests for opacity values, defaults, fallbacks, independence and round trip; verify: `swift test` green
 
-## 5. Größen, Abdunklung und Hilfslinien: Darstellung und Menü
+## 5. Sizes, dimming and guides: rendering and menu
 
-- [x] 5.1 Maße je Stufe in `Style` (Tabelle design.md Decision 8, Mittel = bisherige Werte) und `OverlayView.applyAppearance(_:)` (Halo-Geometrie, Spotlight-Radius, Ring-Maße für neue Ringe, Füllfarben der beiden Dimm-Layer, Fadenkreuz nur bei an) über `OverlayManager.applyAppearance(_:)` inkl. neu angelegter Panels; `OverlayController` lädt, speichert und verteilt `appearance`; verifizieren: `swift build` ohne Warnungen, mit Defaults sind Ring, Halo und Spotlight so groß und Highlight/Spotlight so dunkel wie vorher
-- [x] 5.2 Untermenüs „Größe Klick-Ring“, „Größe Halo“, „Größe Spotlight“ (Klein/Mittel/Groß), „Abdunklung Highlight“, „Abdunklung Spotlight“ (Leicht/Mittel/Stark), jeweils mit Häkchen, und Schalter „Hilfslinien beim Aufziehen“ in `StatusMenu` (Anordnung design.md Decision 10) und an `OverlayController` anbinden; verifizieren: alle Szenarien der Spec `marking-appearance` manuell durchspielen (u. a. Halo/Spotlight ändern sich sofort bei aktivem Modus, Hilfslinien aus → nur Auswahlrechteck sichtbar, Abdunklung bei sichtbarem Highlight ändern → sofort dunkler/heller, Highlight bleibt)
-- [x] 5.3 README um Größen, Abdunklung und Hilfslinien ergänzen (Menüeinträge, Stufen, Standard, Speicherung, Reset-Schlüssel); verifizieren: README beschreibt die Menüeinträge so, wie sie erscheinen
+- [x] 5.1 Dimensions per level in `Style` (table in design.md Decision 8, Medium = existing values) and `OverlayView.applyAppearance(_:)` (halo geometry, spotlight radius, ring dimensions for new rings, fill colors of both dimming layers, crosshair only when on) through `OverlayManager.applyAppearance(_:)` including newly created panels; `OverlayController` loads, saves and distributes `appearance`; verify: `swift build` without warnings, with the defaults ring, halo and spotlight are as large and highlight/spotlight as dark as before
+- [x] 5.2 Add the submenus “Click Ring Size”, “Halo Size”, “Spotlight Size” (Small/Medium/Large), “Highlight Dimming”, “Spotlight Dimming” (Light/Medium/Strong), each with check marks, and the toggle “Crosshair While Selecting” to `StatusMenu` (order as in design.md Decision 10) and connect them to `OverlayController`; verify: walk through all scenarios of the spec `marking-appearance` manually (among others: halo/spotlight change immediately while active, guides off → only the selection rectangle is visible, changing the dimming with a visible highlight → immediately darker/lighter, the highlight stays)
+- [x] 5.3 Extend the README with sizes, dimming and guides (menu items, levels, default, persistence, reset keys); verify: the README describes the menu items as they appear
 
 ## 6. Integration
 
-- [x] 6.1 App per `scripts/build-app.sh --open` neu bauen und Ende-zu-Ende prüfen: Akzent und Rechtsklick ändern, Links-/Rechts-/ctrl+Klick auf beiden Monitoren, Halo, Fadenkreuz und Auswahlrechteck beim Aufziehen, Rechteck-Highlight in neuer Farbe; alle drei Größen in je zwei Stufen, beide Abdunklungen Leicht/Stark, Hilfslinien an/aus; App beenden und neu starten → Farben, Größen, Abdunklung und Hilfslinien-Schalter bleiben erhalten; verifizieren: alle Punkte vom Nutzer bestätigt
+- [x] 6.1 Rebuild the app with `scripts/build-app.sh --open` and check end to end: change accent and right-click color, left/right/ctrl-click on both displays, halo, crosshair and selection rectangle while dragging, rectangle highlight in the new color; all three sizes in two levels each, both dimmings Light/Strong, guides on/off; quit and relaunch the app → colors, sizes, dimming and guide toggle are kept; verify: all points confirmed by the user

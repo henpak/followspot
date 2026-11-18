@@ -2,38 +2,39 @@
 
 ## Why
 
-Die App soll öffentlich auf GitHub erscheinen (`henpak/followspot`) und für andere einfach installierbar sein. Dafür passt einiges nicht mehr:
+The app is going to be published on GitHub (`henpak/followspot`) and should be easy for others to install. Several things no longer fit:
 
-- Der Name „Presenter“ ist zu generisch.
-- Die Oberfläche ist deutsch, das Publikum international.
-- Bundle-ID (`local.presenter.app`), Standard-Signatur (persönliches „Apple Development“-Zertifikat) und README sind auf den Eigengebrauch zugeschnitten.
-- Es gibt keine Releases, keinen Installer und keine CI.
+- The name “Presenter” is too generic.
+- The UI and all documentation are in German, while the audience is international.
+- The bundle ID (`local.presenter.app`), the default signing identity (a personal “Apple Development” certificate) and the README are tailored to personal use.
+- There are no releases, no installer and no CI.
 
 ## What Changes
 
-- **BREAKING** Neuer Name **Followspot**: App-Bundle `Followspot.app`, Bundle-ID `io.github.henpak.followspot`, Swift-Targets `Followspot`/`FollowspotCore`.
-- **BREAKING** Oberfläche komplett auf Englisch (Menü, Farb- und Stufennamen, Hinweise). Keine deutsche Lokalisierung.
-- Einstellungen aus der alten Domain `local.presenter.app` werden beim ersten Start einmalig übernommen.
-- Skripte: `package-app.sh` (Universal-Build, ad-hoc signiert, ZIP + SHA-256), `build-app.sh` (lokal bauen und installieren), `install.sh` (Einzeiler-Installation aus GitHub Releases, Deinstallation).
-- GitHub Actions: CI (Build, Tests, Paket, shellcheck) und Release-Workflow bei Tags `v*`.
-- Englische README, MIT-Lizenz, Changelog, Issue-Templates, Dependabot.
-- `.claude/` und `.devin/` werden nicht mehr versioniert.
+- **BREAKING** New name **Followspot**: app bundle `Followspot.app`, bundle ID `io.github.henpak.followspot`, Swift targets `Followspot`/`FollowspotCore`.
+- **BREAKING** The UI is entirely in English (menu, color and level names, notices). No German localization.
+- Settings from the old domain `local.presenter.app` are taken over once at first launch.
+- Scripts: `package-app.sh` (universal build, ad-hoc signed, ZIP + SHA-256), `build-app.sh` (build and install locally), `install.sh` (one-line install from GitHub Releases, uninstall).
+- GitHub Actions: CI (build, tests, packaging, shellcheck) and a release workflow for `v*` tags.
+- English README, MIT license, changelog, issue templates, Dependabot.
+- All specs and change documents in the repository are translated to English.
+- `.claude/` and `.devin/` are no longer versioned.
 
 ## Capabilities
 
 ### New Capabilities
 
-Keine.
+None.
 
 ### Modified Capabilities
 
-- `marking-colors`: englische Menütitel und Farbnamen; Farben werden aus „Presenter“ übernommen.
-- `marking-appearance`: englische Menütitel und Stufennamen; Einstellungen werden aus „Presenter“ übernommen.
-- `presenter-controls`: englische Menüeinträge, App-Name Followspot.
+- `marking-colors`: English menu titles and color names; colors are taken over from “Presenter”.
+- `marking-appearance`: English menu titles and level names; settings are taken over from “Presenter”.
+- `presenter-controls`: English menu items, app name Followspot.
 
 ## Impact
 
-- **Code:** alle Quell- und Testordner (Umbenennung), `StatusMenu.swift`, `PaletteColor.swift`, `AppearanceSettings.swift`, `HotkeyManager.swift`, `Log.swift`, App-Einstieg; neu `SettingsMigration.swift`
+- **Code:** all source and test folders (rename), `StatusMenu.swift`, `PaletteColor.swift`, `AppearanceSettings.swift`, `HotkeyManager.swift`, `Log.swift`, app entry point; new `SettingsMigration.swift`
 - **Build:** `Package.swift`, `Resources/Info.plist`, `scripts/`
-- **Repo:** `.github/`, `README.md`, `LICENSE`, `CHANGELOG.md`, `.gitignore`
-- **Nutzer:** eine vorhandene `Presenter.app` muss durch `Followspot.app` ersetzt werden; Einstellungen bleiben erhalten.
+- **Repository:** `.github/`, `README.md`, `LICENSE`, `CHANGELOG.md`, `.gitignore`, `openspec/` (translation)
+- **Users:** an existing `Presenter.app` is replaced by `Followspot.app`; settings are kept.

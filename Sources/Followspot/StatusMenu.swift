@@ -1,7 +1,7 @@
 import AppKit
 import FollowspotCore
 
-/// Menu bar icon and menu (Spec presenter-controls: Menüleisten-Menü).
+/// Menu bar icon and menu (spec presenter-controls: Menu bar menu).
 @MainActor
 final class StatusMenu: NSObject, NSMenuDelegate {
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
@@ -45,7 +45,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         menu.addItem(colorItem(title: "Accent Color", forAccent: true))
         menu.addItem(colorItem(title: "Right-Click Color", forAccent: false))
 
-        // Sizes, dimming and guides (spec marking-appearance: Bedienung im Menü).
+        // Sizes, dimming and guides (spec marking-appearance: Menu controls).
         let appearance = controller.appearance
         menu.addItem(.separator())
         menu.addItem(levelItem(title: "Click Ring Size", levels: MarkingSize.allCases, active: appearance.clickRingSize,
@@ -88,7 +88,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         menu.addItem(item)
     }
 
-    /// Menu entry with a submenu of levels (Klein/Mittel/Groß, Leicht/Mittel/Stark);
+    /// Menu entry with a submenu of levels (Small/Medium/Large, Light/Medium/Strong);
     /// the active level carries a check mark.
     private func levelItem<Level: Equatable>(title: String,
                                              levels: [Level],
@@ -116,7 +116,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
     @objc private func toggleSelectionGuides() { controller.toggleSelectionGuides() }
 
     /// Menu entry with the active colour as dot and a submenu with the palette
-    /// (spec marking-colors: Farbwahl im Menü, Unterscheidbarkeit).
+    /// (spec marking-colors: Choosing colors in the menu, Distinct left- and right-click colors).
     private func colorItem(title: String, forAccent: Bool) -> NSMenuItem {
         let colors = controller.colors
         let active = forAccent ? colors.accent : colors.rightClick

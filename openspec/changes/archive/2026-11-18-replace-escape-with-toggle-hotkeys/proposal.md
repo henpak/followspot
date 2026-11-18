@@ -2,41 +2,41 @@
 
 ## Why
 
-Bug-Report: Halo ist an, der Nutzer hebt einen Bereich hervor und drückt Esc. Das Highlight verschwindet wie erwartet, aber auch das Halo geht aus. Erwartet war, dass das Halo bleibt.
+Bug report: the halo is on, the user highlights an area and presses Esc. The highlight disappears as expected, but the halo turns off too. The expectation was that the halo stays.
 
-Ursache ist kein Programmierfehler, sondern die bisherige Festlegung: Esc entfernt „alle aktiven Markierungen“ und schaltet damit auch Halo und Spotlight ab (`add-presenter-overlay`, design.md Decision 7). Dazu kommt ein Nebeneffekt: Solange Halo oder Spotlight an sind, fängt Presenter Esc systemweit ab, und die präsentierte App (Keynote, Dialoge) bekommt es nicht.
+The cause is not a programming error but the previous definition: Esc removes “all active markings” and therefore also turns off halo and spotlight (`add-presenter-overlay`, design.md Decision 7). There is also a side effect: while halo or spotlight are on, Presenter captures Esc system-wide, so the presented app (Keynote, dialogs) does not receive it.
 
-Der Nutzer wünscht sich ein einheitliches Bedienprinzip: Jedes Kürzel schaltet seine Funktion ein, ein erneuter Druck schaltet sie wieder aus. Esc wird dafür nicht mehr gebraucht.
+The user wants a consistent operating principle: every shortcut turns its feature on, and pressing it again turns it off. Esc is no longer needed for that.
 
 ## What Changes
 
-- **BREAKING** Esc wird von Presenter nicht mehr abgefangen, in keinem Zustand. Es erreicht immer die Vordergrund-App.
-- `⌥F1` wird zum Umschalter:
-  - nichts aktiv → Rechteck-Auswahl starten
-  - Auswahl läuft → Auswahl abbrechen
-  - Highlight sichtbar → Highlight entfernen (bisher: neue Auswahl starten, die das alte ersetzt)
-- `⌥F2`, `⌥F3`, `⌥F4` bleiben unverändert Umschalter. Halo und Spotlight gehen nur noch über ihr eigenes Kürzel, das Menü oder „Beenden“ aus.
-- Unverändert: Ein normaler Klick entfernt das Highlight; ein Klick ohne Ziehen bricht die Auswahl ab.
-- Menü: Der Hinweis „Esc entfernt alle Markierungen“ entfällt. „Bereich hervorheben“ trägt ein Häkchen, solange Auswahl oder Highlight aktiv sind, und schaltet wie `⌥F1` um.
-- README: Kürzeltabelle und Erläuterungen ohne Esc.
+- **BREAKING** Presenter no longer captures Esc, in any state. It always reaches the app in front.
+- `⌥F1` becomes a toggle:
+  - nothing active → start the rectangle selection
+  - selection running → cancel the selection
+  - highlight visible → remove the highlight (previously: start a new selection that replaces the old one)
+- `⌥F2`, `⌥F3`, `⌥F4` stay toggles as before. Halo and spotlight are only turned off by their own shortcut, the menu or “Quit”.
+- Unchanged: a normal click removes the highlight; a click without dragging cancels the selection.
+- Menu: the note “Esc removes all markings” is dropped. “Highlight area” carries a check mark while a selection or a highlight is active, and toggles like `⌥F1`.
+- README: shortcut table and explanations without Esc.
 
 ## Capabilities
 
 ### New Capabilities
 
-Keine.
+None.
 
 ### Modified Capabilities
 
-- `presenter-controls`: „Systemweite Hotkeys“ beschreibt `⌥F1` als Umschalter; „Esc entfernt Markierungen“ entfällt; „Menüleisten-Menü“ ohne Esc-Hinweis, mit Zustand für „Bereich hervorheben“.
-- `area-highlighting`: Abbrechen der Auswahl und Entfernen des Highlights per `⌥F1` statt Esc; erneutes `⌥F1` bei sichtbarem Highlight entfernt es, statt ein neues zu starten.
+- `presenter-controls`: “System-wide shortcuts” describes `⌥F1` as a toggle; “Esc removes markings” is removed; “Menu bar menu” without the Esc note and with a state for “Highlight area”.
+- `area-highlighting`: cancelling the selection and removing the highlight with `⌥F1` instead of Esc; pressing `⌥F1` again with a visible highlight removes it instead of starting a new one.
 
 ## Impact
 
 - **Code:**
-  - `Sources/PresenterCore/OverlayState.swift`: `toggleSelection()`, `isHighlightActive`; `escape()`, `hasActiveMarkings`, `escapeShouldBeRegistered` entfallen
-  - `Sources/Presenter/HotkeyManager.swift`: `HotkeyAction.escape` und die dynamische Esc-Registrierung entfallen
+  - `Sources/PresenterCore/OverlayState.swift`: `toggleSelection()`, `isHighlightActive`; `escape()`, `hasActiveMarkings`, `escapeShouldBeRegistered` are removed
+  - `Sources/Presenter/HotkeyManager.swift`: `HotkeyAction.escape` and the dynamic Esc registration are removed
   - `Sources/Presenter/OverlayController.swift`, `Sources/Presenter/StatusMenu.swift`
-- **Tests:** `OverlayStateTests` angepasst
-- **Doku:** `README.md`
-- Keine Änderung an gespeicherten Einstellungen, Berechtigungen oder Build.
+- **Tests:** `OverlayStateTests` updated
+- **Docs:** `README.md`
+- No change to stored settings, permissions or the build.

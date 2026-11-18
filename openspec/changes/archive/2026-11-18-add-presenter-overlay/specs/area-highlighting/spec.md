@@ -2,62 +2,62 @@
 
 ## Purpose
 
-Lenkt die Aufmerksamkeit der Zuschauer auf einen bestimmten Bildschirmbereich, indem dieser hervorgehoben und der Rest abgedunkelt wird – entweder als aufgezogenes Rechteck oder als Spotlight um den Cursor.
+Draws the viewers' attention to a specific area of the screen by highlighting it and dimming the rest, either as a dragged rectangle or as a spotlight around the cursor.
 
 ## ADDED Requirements
 
-### Requirement: Rechteck-Auswahl im Ein-Schuss-Modus
-Nach Auslösen des Highlight-Hotkeys SHALL die App genau eine Rechteck-Auswahl per Maus-Ziehen ermöglichen und danach automatisch in den Normalbetrieb zurückkehren. Während der Auswahl MUST ein Fadenkreuz-Cursor angezeigt werden.
+### Requirement: One-shot rectangle selection
+After the highlight shortcut is triggered, the app SHALL allow exactly one rectangle selection by dragging the mouse and then return to normal operation automatically. A crosshair cursor MUST be shown during the selection.
 
-#### Scenario: Rechteck aufziehen
-- **WHEN** der Nutzer den Highlight-Hotkey drückt und ein Rechteck aufzieht
-- **THEN** wird dieser Bereich hervorgehoben und Klicks erreichen danach wieder die Apps
+#### Scenario: Dragging a rectangle
+- **WHEN** the user presses the highlight shortcut and drags a rectangle
+- **THEN** that area is highlighted and clicks reach the apps again afterwards
 
-#### Scenario: Auswahl abbrechen
-- **WHEN** der Nutzer im Auswahlmodus Esc drückt, bevor er ein Rechteck zieht
-- **THEN** wird der Auswahlmodus ohne Highlight beendet
+#### Scenario: Cancelling the selection
+- **WHEN** the user presses Esc in selection mode before dragging a rectangle
+- **THEN** selection mode ends without a highlight
 
-#### Scenario: Klick ohne Ziehen
-- **WHEN** der Nutzer im Auswahlmodus nur klickt, ohne ein Rechteck aufzuziehen
-- **THEN** entsteht kein Highlight und die App kehrt in den Normalbetrieb zurück
+#### Scenario: Click without dragging
+- **WHEN** the user only clicks in selection mode without dragging a rectangle
+- **THEN** no highlight is created and the app returns to normal operation
 
-#### Scenario: Auswahl auf dem externen Monitor
-- **WHEN** der Nutzer das Rechteck auf dem externen Monitor aufzieht
-- **THEN** erscheint das Highlight auf dem externen Monitor
+#### Scenario: Selection on the external display
+- **WHEN** the user drags the rectangle on the external display
+- **THEN** the highlight appears on the external display
 
-### Requirement: Darstellung des Rechteck-Highlights
-Ein Rechteck-Highlight SHALL den Bereich außerhalb des Rechtecks auf dem betroffenen Bildschirm deutlich abdunkeln (ca. 40 %) und das Rechteck mit einem farbigen Rahmen versehen. Der Inhalt innerhalb des Rechtecks MUST unverändert sichtbar bleiben.
+### Requirement: Rectangle highlight appearance
+A rectangle highlight SHALL clearly dim the area outside the rectangle on the affected display (about 40 %) and give the rectangle a colored border. The content inside the rectangle MUST stay visible unchanged.
 
-#### Scenario: Highlight sichtbar
-- **WHEN** ein Rechteck-Highlight aktiv ist
-- **THEN** ist der Bereich außerhalb abgedunkelt und der Bereich innerhalb unverändert hell mit Rahmen
+#### Scenario: Highlight visible
+- **WHEN** a rectangle highlight is active
+- **THEN** the area outside is dimmed and the area inside stays unchanged and bright, with a border
 
-### Requirement: Entfernen des Rechteck-Highlights
-Ein aktives Rechteck-Highlight SHALL beim nächsten normalen Maus-Klick oder beim Drücken von Esc verschwinden. Der entfernende Klick MUST trotzdem die darunterliegende App erreichen.
+### Requirement: Removing the rectangle highlight
+An active rectangle highlight SHALL disappear with the next normal mouse click or when Esc is pressed. The removing click MUST still reach the app underneath.
 
-#### Scenario: Weiterklicken entfernt Highlight
-- **WHEN** ein Highlight aktiv ist und der Nutzer irgendwo klickt
-- **THEN** verschwindet das Highlight und der Klick wird von der App unter dem Mauszeiger verarbeitet
+#### Scenario: Clicking on removes the highlight
+- **WHEN** a highlight is active and the user clicks anywhere
+- **THEN** the highlight disappears and the click is handled by the app under the pointer
 
-#### Scenario: Esc entfernt Highlight
-- **WHEN** ein Highlight aktiv ist und der Nutzer Esc drückt
-- **THEN** verschwindet das Highlight
+#### Scenario: Esc removes the highlight
+- **WHEN** a highlight is active and the user presses Esc
+- **THEN** the highlight disappears
 
-#### Scenario: Neues Highlight ersetzt altes
-- **WHEN** ein Highlight aktiv ist und der Nutzer erneut den Highlight-Hotkey auslöst
-- **THEN** wird das alte Highlight entfernt und ein neues kann aufgezogen werden
+#### Scenario: New highlight replaces the old one
+- **WHEN** a highlight is active and the user triggers the highlight shortcut again
+- **THEN** the old highlight is removed and a new one can be dragged
 
 ### Requirement: Spotlight
-Die App SHALL einen Spotlight-Modus bieten, der alle Bildschirme abdunkelt bis auf einen Kreis um den Mauszeiger, der dem Zeiger folgt. Der Spotlight-Modus MUST per Hotkey ein- und ausschaltbar sein und das Overlay dabei klick-durchlässig lassen.
+The app SHALL offer a spotlight mode that dims all displays except a circle around the mouse pointer, which follows the pointer. The spotlight MUST be toggled by shortcut and keep the overlay click-through.
 
-#### Scenario: Spotlight einschalten
-- **WHEN** der Nutzer den Spotlight-Hotkey drückt
-- **THEN** wird alles außer einem Kreis um den Mauszeiger abgedunkelt
+#### Scenario: Turning the spotlight on
+- **WHEN** the user presses the spotlight shortcut
+- **THEN** everything except a circle around the mouse pointer is dimmed
 
-#### Scenario: Spotlight folgt der Maus
-- **WHEN** der Spotlight aktiv ist und der Nutzer die Maus bewegt
-- **THEN** bewegt sich der helle Kreis mit dem Zeiger
+#### Scenario: Spotlight follows the mouse
+- **WHEN** the spotlight is active and the user moves the mouse
+- **THEN** the bright circle moves with the pointer
 
-#### Scenario: Spotlight ausschalten
-- **WHEN** der Spotlight aktiv ist und der Nutzer den Spotlight-Hotkey erneut drückt
-- **THEN** wird die Abdunklung entfernt
+#### Scenario: Turning the spotlight off
+- **WHEN** the spotlight is active and the user presses the spotlight shortcut again
+- **THEN** the dimming is removed

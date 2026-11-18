@@ -2,79 +2,83 @@
 
 ## Purpose
 
-Ermöglicht es, die Größe von Klick-Ring, Cursor-Halo und Spotlight sowie die Abdunklungsstärke von Highlight und Spotlight in je drei Stufen anzupassen und die Hilfslinien bei der Rechteck-Auswahl ein- oder auszublenden, damit die Markierungen zu Monitorgröße und Präsentationsstil passen.
+Lets the user adjust the size of click ring, cursor halo and spotlight as well as the dimming strength of highlight and spotlight in three levels each, and show or hide the crosshair guides during rectangle selection, so the markings fit the display size and presentation style.
 
 ## Requirements
 
-### Requirement: Größenstufen
-Die App SHALL für Klick-Ring, Cursor-Halo und Spotlight jeweils eine eigene Größeneinstellung mit den Stufen Klein, Mittel und Groß anbieten. Die Stufe Mittel MUST der bisherigen Größe entsprechen und SHALL der Standardwert sein; Klein MUST sichtbar kleiner und Groß sichtbar größer sein.
+### Requirement: Size levels
+The app SHALL offer a separate size setting each for click ring, cursor halo and spotlight, with the levels Small, Medium and Large. Medium MUST match the original size and SHALL be the default; Small MUST be visibly smaller and Large visibly larger.
 
-#### Scenario: Standard beim ersten Start
-- **WHEN** die App zum ersten Mal startet
-- **THEN** sind Klick-Ring, Halo und Spotlight auf Mittel und so groß wie vor dieser Änderung
+#### Scenario: Default at first launch
+- **WHEN** the app launches for the first time
+- **THEN** click ring, halo and spotlight are set to Medium and have their original size
 
-#### Scenario: Einstellungen sind unabhängig
-- **WHEN** der Nutzer die Klick-Ring-Größe auf Klein und die Halo-Größe auf Groß stellt
-- **THEN** erscheinen Klick-Ringe klein, das Halo groß und die Spotlight-Größe bleibt unverändert
+#### Scenario: Settings are independent
+- **WHEN** the user sets the click ring size to Small and the halo size to Large
+- **THEN** click rings appear small, the halo appears large and the spotlight size stays unchanged
 
-### Requirement: Größe des Klick-Rings
-Die gewählte Klick-Ring-Größe SHALL Start- und Endgröße sowie die Linienstärke des Rings bestimmen, für Links-, Rechts- und sonstige Klicks gleichermaßen. Sie SHALL für jeden nach der Änderung erscheinenden Ring gelten; bereits laufende Ring-Animationen laufen in der alten Größe aus.
+### Requirement: Click ring size
+The chosen click ring size SHALL determine the start and end size and the line width of the ring, equally for left, right and other clicks. It SHALL apply to every ring that appears after the change; ring animations already running finish in the old size.
 
-#### Scenario: Großer Klick-Ring
-- **WHEN** der Nutzer die Klick-Ring-Größe auf Groß stellt und danach klickt
-- **THEN** erscheint ein deutlich größerer Ring mit dickerer Linie als bei Mittel
+#### Scenario: Large click ring
+- **WHEN** the user sets the click ring size to Large and then clicks
+- **THEN** a noticeably larger ring with a thicker line than at Medium appears
 
-### Requirement: Größe von Halo und Spotlight
-Die gewählte Halo-Größe SHALL den Radius des Cursor-Halos bestimmen, die gewählte Spotlight-Größe den Radius des hellen Kreises im Spotlight. Eine Änderung MUST sofort wirken, auch wenn Halo bzw. Spotlight gerade eingeschaltet sind.
+### Requirement: Halo and spotlight size
+The chosen halo size SHALL determine the radius of the cursor halo, the chosen spotlight size the radius of the bright circle of the spotlight. A change MUST take effect immediately, even while the halo or spotlight is on.
 
-#### Scenario: Halo-Größe bei aktivem Halo ändern
-- **WHEN** das Halo eingeschaltet ist und der Nutzer die Halo-Größe auf Klein stellt
-- **THEN** wird das Halo sofort kleiner und folgt weiter dem Mauszeiger
+#### Scenario: Changing the halo size while the halo is on
+- **WHEN** the halo is on and the user sets the halo size to Small
+- **THEN** the halo becomes smaller immediately and keeps following the pointer
 
-#### Scenario: Spotlight-Größe bei aktivem Spotlight ändern
-- **WHEN** der Spotlight eingeschaltet ist und der Nutzer die Spotlight-Größe auf Groß stellt
-- **THEN** wird der helle Kreis sofort größer
+#### Scenario: Changing the spotlight size while the spotlight is on
+- **WHEN** the spotlight is on and the user sets the spotlight size to Large
+- **THEN** the bright circle becomes larger immediately
 
-### Requirement: Abdunklungsstärke
-Die App SHALL zwei getrennte Einstellungen für die Abdunklung anbieten – eine für das Rechteck-Highlight, eine für den Spotlight – jeweils mit den Stufen Leicht (25 %), Mittel (40 %) und Stark (60 %) Schwarz. Mittel SHALL der Standardwert sein. Der hervorgehobene Bereich bzw. der helle Kreis MUST unabhängig von der Stufe unverändert hell bleiben. Eine Änderung MUST sofort wirken, auch auf ein sichtbares Highlight bzw. einen aktiven Spotlight.
+### Requirement: Dimming strength
+The app SHALL offer two separate dimming settings, one for the rectangle highlight and one for the spotlight, each with the levels Light (25 %), Medium (40 %) and Strong (60 %) black. Medium SHALL be the default. The highlighted area or bright circle MUST stay unchanged and bright regardless of the level. A change MUST take effect immediately, including on a visible highlight or an active spotlight.
 
-#### Scenario: Highlight stärker abdunkeln
-- **WHEN** ein Rechteck-Highlight sichtbar ist und der Nutzer „Abdunklung Highlight“ auf Stark stellt
-- **THEN** wird der Bereich außerhalb des Rechtecks sofort dunkler, das Rechteck selbst bleibt hell und das Highlight bleibt bestehen
+#### Scenario: Dimming the highlight more strongly
+- **WHEN** a rectangle highlight is visible and the user sets “Highlight Dimming” to Strong
+- **THEN** the area outside the rectangle becomes darker immediately, the rectangle itself stays bright and the highlight stays
 
-#### Scenario: Einstellungen sind getrennt
-- **WHEN** der Nutzer „Abdunklung Spotlight“ auf Leicht stellt und „Abdunklung Highlight“ auf Mittel lässt
-- **THEN** dunkelt der Spotlight schwächer ab als ein Rechteck-Highlight
+#### Scenario: Settings are separate
+- **WHEN** the user sets “Spotlight Dimming” to Light and leaves “Highlight Dimming” at Medium
+- **THEN** the spotlight dims less than a rectangle highlight
 
-### Requirement: Hilfslinien bei der Rechteck-Auswahl
-Die App SHALL einen Schalter „Hilfslinien beim Aufziehen“ anbieten, Standard an. Ist er an, MUST während der Rechteck-Auswahl ein Fadenkreuz aus Linien über den ganzen Bildschirm durch den Mauszeiger angezeigt werden; ist er aus, MUST dieses Fadenkreuz entfallen. Das Auswahlrechteck während des Ziehens und das fertige Highlight MUST in beiden Fällen angezeigt werden.
+### Requirement: Crosshair guides during rectangle selection
+The app SHALL offer a toggle “Crosshair While Selecting”, on by default. When it is on, a crosshair of lines across the whole display through the mouse pointer MUST be shown during rectangle selection; when it is off, this crosshair MUST be omitted. The selection rectangle while dragging and the finished highlight MUST be shown in both cases.
 
-#### Scenario: Hilfslinien ausgeschaltet
-- **WHEN** der Nutzer „Hilfslinien beim Aufziehen“ ausschaltet und die Rechteck-Auswahl startet
-- **THEN** erscheinen keine Linien über den Bildschirm, beim Ziehen ist aber das gestrichelte Auswahlrechteck sichtbar
+#### Scenario: Guides turned off
+- **WHEN** the user turns “Crosshair While Selecting” off and starts a rectangle selection
+- **THEN** no lines appear across the display, but the dashed selection rectangle is visible while dragging
 
-#### Scenario: Hilfslinien eingeschaltet
-- **WHEN** der Schalter an ist und der Nutzer die Rechteck-Auswahl startet
-- **THEN** laufen Fadenkreuz-Linien durch den Mauszeiger über den ganzen Bildschirm
+#### Scenario: Guides turned on
+- **WHEN** the toggle is on and the user starts a rectangle selection
+- **THEN** crosshair lines run across the whole display through the mouse pointer
 
-### Requirement: Bedienung im Menü
-Das Menüleisten-Menü SHALL je ein Untermenü „Größe Klick-Ring“, „Größe Halo“ und „Größe Spotlight“ mit den Einträgen Klein, Mittel, Groß sowie „Abdunklung Highlight“ und „Abdunklung Spotlight“ mit den Einträgen Leicht, Mittel, Stark enthalten, wobei die aktive Stufe mit Häkchen markiert ist, sowie den Schalter „Hilfslinien beim Aufziehen“ mit sichtbarem Ein/Aus-Zustand.
+### Requirement: Menu controls
+The menu bar menu SHALL contain the submenus “Click Ring Size”, “Halo Size” and “Spotlight Size” with the items Small, Medium, Large, and “Highlight Dimming” and “Spotlight Dimming” with the items Light, Medium, Strong, with the active level carrying a check mark, as well as the toggle “Crosshair While Selecting” with a visible on/off state.
 
-#### Scenario: Aktive Stufe erkennbar
-- **WHEN** die Halo-Größe Groß ist und der Nutzer das Untermenü „Größe Halo“ öffnet
-- **THEN** ist Groß mit Häkchen markiert
+#### Scenario: Active level visible
+- **WHEN** the halo size is Large and the user opens the “Halo Size” submenu
+- **THEN** Large carries a check mark
 
-#### Scenario: Schalterzustand erkennbar
-- **WHEN** die Hilfslinien ausgeschaltet sind und der Nutzer das Menü öffnet
-- **THEN** ist „Hilfslinien beim Aufziehen“ ohne Häkchen
+#### Scenario: Toggle state visible
+- **WHEN** the crosshair guides are off and the user opens the menu
+- **THEN** “Crosshair While Selecting” has no check mark
 
-### Requirement: Einstellungen bleiben gespeichert
-Größen, Abdunklungsstärken und Hilfslinien-Schalter SHALL über Beenden und Neustart der App erhalten bleiben. Fehlende oder unbekannte gespeicherte Werte MUST auf die Standardwerte (Mittel bzw. Hilfslinien an) zurückfallen.
+### Requirement: Settings are remembered
+Sizes, dimming levels and the crosshair toggle SHALL persist across quitting and relaunching the app. Missing or unknown stored values MUST fall back to the defaults (Medium, crosshair on). Settings chosen under the app's former name “Presenter” SHALL be taken over.
 
-#### Scenario: Neustart
-- **WHEN** der Nutzer die Spotlight-Größe auf Klein stellt und die Hilfslinien ausschaltet, die App beendet und neu startet
-- **THEN** ist die Spotlight-Größe weiterhin Klein und die Hilfslinien sind aus
+#### Scenario: Relaunch
+- **WHEN** the user sets the spotlight size to Small, turns the crosshair off, quits the app and launches it again
+- **THEN** the spotlight size is still Small and the crosshair is off
 
-#### Scenario: Unbekannter gespeicherter Wert
-- **WHEN** für die Klick-Ring-Größe ein unbekannter Wert gespeichert ist
-- **THEN** verwendet die App die Stufe Mittel
+#### Scenario: Unknown stored value
+- **WHEN** an unknown value is stored for the click ring size
+- **THEN** the app uses the level Medium
+
+#### Scenario: Takeover from Presenter
+- **WHEN** the user previously used the app under the name “Presenter” and launches Followspot for the first time
+- **THEN** the previously chosen sizes, dimming levels and crosshair toggle still apply

@@ -2,44 +2,44 @@
 
 ## MODIFIED Requirements
 
-### Requirement: Rechteck-Auswahl im Ein-Schuss-Modus
-Nach Auslösen des Highlight-Hotkeys SHALL die App genau eine Rechteck-Auswahl per Maus-Ziehen ermöglichen und danach automatisch in den Normalbetrieb zurückkehren. Während der Auswahl MUST ein Fadenkreuz-Cursor angezeigt werden. Ein erneutes Drücken des Highlight-Hotkeys während der Auswahl MUST die Auswahl abbrechen.
+### Requirement: One-shot rectangle selection
+After the highlight shortcut is triggered, the app SHALL allow exactly one rectangle selection by dragging the mouse and then return to normal operation automatically. A crosshair cursor MUST be shown during the selection. Pressing the highlight shortcut again during the selection MUST cancel it.
 
-#### Scenario: Rechteck aufziehen
-- **WHEN** der Nutzer den Highlight-Hotkey drückt und ein Rechteck aufzieht
-- **THEN** wird dieser Bereich hervorgehoben und Klicks erreichen danach wieder die Apps
+#### Scenario: Dragging a rectangle
+- **WHEN** the user presses the highlight shortcut and drags a rectangle
+- **THEN** that area is highlighted and clicks reach the apps again afterwards
 
-#### Scenario: Auswahl abbrechen
-- **WHEN** der Nutzer im Auswahlmodus den Highlight-Hotkey erneut drückt, bevor er ein Rechteck zieht
-- **THEN** wird der Auswahlmodus ohne Highlight beendet
+#### Scenario: Cancelling the selection
+- **WHEN** the user presses the highlight shortcut again in selection mode before dragging a rectangle
+- **THEN** selection mode ends without a highlight
 
-#### Scenario: Klick ohne Ziehen
-- **WHEN** der Nutzer im Auswahlmodus nur klickt, ohne ein Rechteck aufzuziehen
-- **THEN** entsteht kein Highlight und die App kehrt in den Normalbetrieb zurück
+#### Scenario: Click without dragging
+- **WHEN** the user only clicks in selection mode without dragging a rectangle
+- **THEN** no highlight is created and the app returns to normal operation
 
-#### Scenario: Auswahl auf dem externen Monitor
-- **WHEN** der Nutzer das Rechteck auf dem externen Monitor aufzieht
-- **THEN** erscheint das Highlight auf dem externen Monitor
+#### Scenario: Selection on the external display
+- **WHEN** the user drags the rectangle on the external display
+- **THEN** the highlight appears on the external display
 
 ## ADDED Requirements
 
-### Requirement: Rechteck-Highlight per Klick oder Hotkey entfernen
-Ein aktives Rechteck-Highlight SHALL beim nächsten normalen Maus-Klick oder beim erneuten Drücken des Highlight-Hotkeys verschwinden. Der entfernende Klick MUST trotzdem die darunterliegende App erreichen. Andere Funktionen (Halo, Spotlight, Klick-Ringe) MUST davon unberührt bleiben.
+### Requirement: Removing the rectangle highlight by click or shortcut
+An active rectangle highlight SHALL disappear with the next normal mouse click or when the highlight shortcut is pressed again. The removing click MUST still reach the app underneath. Other features (halo, spotlight, click rings) MUST NOT be affected.
 
-#### Scenario: Weiterklicken entfernt Highlight
-- **WHEN** ein Highlight aktiv ist und der Nutzer irgendwo klickt
-- **THEN** verschwindet das Highlight und der Klick wird von der App unter dem Mauszeiger verarbeitet
+#### Scenario: Clicking on removes the highlight
+- **WHEN** a highlight is active and the user clicks anywhere
+- **THEN** the highlight disappears and the click is handled by the app under the pointer
 
-#### Scenario: Hotkey entfernt Highlight
-- **WHEN** ein Highlight aktiv ist und der Nutzer den Highlight-Hotkey erneut drückt
-- **THEN** verschwindet das Highlight, ohne dass eine neue Auswahl beginnt
+#### Scenario: Shortcut removes the highlight
+- **WHEN** a highlight is active and the user presses the highlight shortcut again
+- **THEN** the highlight disappears without starting a new selection
 
-#### Scenario: Neues Highlight nach dem Entfernen
-- **WHEN** das Highlight per Hotkey entfernt wurde und der Nutzer den Highlight-Hotkey noch einmal drückt
-- **THEN** beginnt eine neue Rechteck-Auswahl
+#### Scenario: New highlight after removal
+- **WHEN** the highlight was removed by shortcut and the user presses the highlight shortcut once more
+- **THEN** a new rectangle selection begins
 
 ## REMOVED Requirements
 
-### Requirement: Entfernen des Rechteck-Highlights
-**Reason**: Esc entfernt das Highlight nicht mehr, und ein erneuter Highlight-Hotkey ersetzt es nicht mehr, sondern entfernt es. Ersetzt durch „Rechteck-Highlight per Klick oder Hotkey entfernen“.
-**Migration**: Highlight per Klick oder erneutem `opt+F1` entfernen; für ein neues Highlight `opt+F1` noch einmal drücken.
+### Requirement: Removing the rectangle highlight
+**Reason**: Esc no longer removes the highlight, and pressing the highlight shortcut again no longer replaces it but removes it. Replaced by “Removing the rectangle highlight by click or shortcut”.
+**Migration**: Remove the highlight with a click or by pressing `opt+F1` again; for a new highlight press `opt+F1` once more.

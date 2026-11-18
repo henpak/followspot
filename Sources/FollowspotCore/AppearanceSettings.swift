@@ -1,6 +1,6 @@
 import Foundation
 
-/// Size levels for click ring, halo and spotlight (spec marking-appearance: Größenstufen).
+/// Size levels for click ring, halo and spotlight (spec marking-appearance: Size levels).
 /// The raw value is the persisted ID; concrete point sizes live in the app's `Style`.
 public enum MarkingSize: String, CaseIterable, Sendable {
     case small
@@ -19,7 +19,7 @@ public enum MarkingSize: String, CaseIterable, Sendable {
 }
 
 /// How strongly the area outside a highlight / spotlight is darkened
-/// (spec marking-appearance: Abdunklungsstärke).
+/// (spec marking-appearance: Dimming strength).
 public enum DimLevel: String, CaseIterable, Sendable {
     case light
     case medium
