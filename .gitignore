@@ -1,0 +1,12 @@
+# Build output
+.build/
+build/
+.swiftpm/
+*.xcodeproj/
+
+# macOS
+.DS_Store
+
+# Local AI tooling (not part of the project)
+.claude/
+.devin/

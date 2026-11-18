@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & publish release
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Toolchain
+        run: swift --version
+
+      - name: Test
+        run: swift test
+
+      - name: Package app (universal)
+        env:
+          FOLLOWSPOT_VERSION: ${{ github.ref_name }}
+          FOLLOWSPOT_BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          export FOLLOWSPOT_VERSION="${FOLLOWSPOT_VERSION#v}"
+          scripts/package-app.sh --universal --zip
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            build/Followspot.zip \
+            build/Followspot.zip.sha256 \
+            --title "Followspot ${TAG#v}" \
+            --generate-notes
